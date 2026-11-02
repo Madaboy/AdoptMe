@@ -1,6 +1,5 @@
 package com.adoptme.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,21 +16,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adoptme.R
 import com.adoptme.core.navigation.Screen
+import com.adoptme.ui.theme.OrangeAccent
 
 /**
- * Barra inferior de 5 posiciones.
+ * Barra inferior flotante de 5 posiciones.
  *
  * Publicar · Reportes · [Adoptar] · Intereses · Mi Mascota
  *
- * "Adoptar" es la acción central ovalada que abre el catálogo.
+ * "Adoptar" es la cápsula central naranja y la acción principal.
  * "Publicar" ocupa la primera posición y abre el formulario a pantalla completa.
  */
 @Composable
@@ -40,53 +44,49 @@ fun AdoptMeBottomBar(
     interestCount: Int,
     onNavigate: (Screen) -> Unit
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
             .navigationBarsPadding()
+            .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(88.dp)
-        ) {
         Surface(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .height(72.dp),
-            color = MaterialTheme.colorScheme.surface,
-            shadowElevation = 14.dp
+                .height(82.dp),
+            shape = RoundedCornerShape(32.dp),
+            color = MaterialTheme.colorScheme.inverseSurface,
+            shadowElevation = 18.dp
         ) {
             Row(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                BottomBarItem(
+                DockItem(
                     screen = Screen.Publish,
                     currentRoute = currentRoute,
                     icon = painterResource(R.drawable.ic_publish_adoption),
                     onClick = { onNavigate(Screen.Publish) }
                 )
-                BottomBarItem(
+                DockItem(
                     screen = Screen.Reports,
                     currentRoute = currentRoute,
                     imageVector = Icons.Filled.Place,
                     onClick = { onNavigate(Screen.Reports) }
                 )
 
-                // Espacio reservado para la cápsula central
-                Spacer(Modifier.width(104.dp))
+                CenterAdoptItem(onClick = { onNavigate(Screen.Adopt) })
 
-                BottomBarItem(
+                DockItem(
                     screen = Screen.Interests,
                     currentRoute = currentRoute,
                     imageVector = Icons.Filled.Favorite,
                     badge = interestCount,
                     onClick = { onNavigate(Screen.Interests) }
                 )
-                BottomBarItem(
+                DockItem(
                     screen = Screen.MyPet,
                     currentRoute = currentRoute,
                     imageVector = Icons.Filled.Person,
@@ -94,17 +94,11 @@ fun AdoptMeBottomBar(
                 )
             }
         }
-
-        AdoptCapsule(
-            modifier = Modifier.align(Alignment.TopCenter),
-            onClick = { onNavigate(Screen.Adopt) }
-        )
-        }
     }
 }
 
 @Composable
-private fun RowScope.BottomBarItem(
+private fun RowScope.DockItem(
     screen: Screen,
     currentRoute: String?,
     onClick: () -> Unit,
@@ -113,102 +107,117 @@ private fun RowScope.BottomBarItem(
     badge: Int = 0
 ) {
     val selected = currentRoute == screen.route
-    val tint = if (selected) {
-        MaterialTheme.colorScheme.primary
+    val showLabel = LocalDensity.current.fontScale <= 1.15f
+    val contentColor = if (selected) {
+        MaterialTheme.colorScheme.primaryContainer
     } else {
-        MaterialTheme.colorScheme.onSurfaceVariant
+        MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = 0.72f)
     }
 
     Column(
         modifier = Modifier
             .weight(1f)
             .fillMaxHeight()
-            .clickable(onClick = onClick)
-            .padding(top = 8.dp),
+            .clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(3.dp)
+        verticalArrangement = Arrangement.Center
     ) {
-        Box(contentAlignment = Alignment.TopEnd) {
-            when {
-                imageVector != null -> Icon(
-                    imageVector = imageVector,
-                    contentDescription = screen.label,
-                    tint = tint,
-                    modifier = Modifier.size(22.dp)
-                )
+        Box(contentAlignment = Alignment.Center) {
+            Box(
+                modifier = Modifier
+                    .size(38.dp)
+                    .background(
+                        if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                        CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                when {
+                    imageVector != null -> Icon(
+                        imageVector = imageVector,
+                        contentDescription = screen.label,
+                        tint = if (selected) Color.White else contentColor,
+                        modifier = Modifier.size(21.dp)
+                    )
 
-                icon != null -> Icon(
-                    painter = icon,
-                    contentDescription = screen.label,
-                    tint = tint,
-                    modifier = Modifier.size(22.dp)
-                )
+                    icon != null -> Icon(
+                        painter = icon,
+                        contentDescription = screen.label,
+                        tint = if (selected) Color.White else contentColor,
+                        modifier = Modifier.size(21.dp)
+                    )
+                }
             }
 
             if (badge > 0) {
                 Surface(
                     shape = CircleShape,
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = OrangeAccent,
                     modifier = Modifier
-                        .offset(x = 8.dp, y = (-6).dp)
-                        .size(16.dp)
+                        .align(Alignment.TopEnd)
+                        .offset(x = 2.dp, y = (-2).dp)
+                        .size(17.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Text(
                             text = if (badge > 9) "9+" else badge.toString(),
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSecondary
+                            color = Color.White
                         )
                     }
                 }
             }
         }
 
-        Text(
-            text = screen.label,
-            fontSize = 10.sp,
-            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
-            color = tint,
-            maxLines = 1
-        )
+        if (showLabel) {
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = screen.label,
+                fontSize = 10.sp,
+                lineHeight = 12.sp,
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+                color = contentColor,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 2.dp)
+            )
+        }
     }
 }
 
-/**
- * Cápsula ovalada "Adoptar" con la huella.
- * Es la acción principal de la barra: descubrir mascotas que buscan hogar.
- */
 @Composable
-private fun AdoptCapsule(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
+private fun RowScope.CenterAdoptItem(onClick: () -> Unit) {
     Surface(
         onClick = onClick,
-        modifier = modifier.size(width = 104.dp, height = 44.dp),
+        modifier = Modifier
+            .padding(horizontal = 4.dp)
+            .height(52.dp)
+            .widthIn(min = 88.dp),
         shape = RoundedCornerShape(50),
-        color = MaterialTheme.colorScheme.primary,
-        border = BorderStroke(3.dp, MaterialTheme.colorScheme.background),
+        color = OrangeAccent,
         shadowElevation = 8.dp
     ) {
         Row(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.padding(horizontal = 13.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_paw),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary,
+                tint = Color.White,
                 modifier = Modifier.size(19.dp)
             )
-            Spacer(Modifier.width(5.dp))
+            Spacer(Modifier.width(6.dp))
             Text(
                 text = "Adoptar",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = Color.White
             )
         }
     }

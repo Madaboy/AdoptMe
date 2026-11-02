@@ -28,35 +28,31 @@ fun MoreHubScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        Surface(
-            color = MaterialTheme.colorScheme.surface,
-            shadowElevation = 1.dp
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, end = 20.dp, top = 12.dp, bottom = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 6.dp, end = 18.dp, top = 8.dp, bottom = 10.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Volver",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                Column {
-                    Text(
-                        text = "Más",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = "Funcionalidades en preparación",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Volver",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+            Spacer(Modifier.width(4.dp))
+            Column {
+                Text(
+                    text = "Más",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = "Funcionalidades en preparación",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
 
@@ -66,14 +62,14 @@ fun MoreHubScreen(
         ) {
             item {
                 Surface(
-                    shape = RoundedCornerShape(18.dp),
+                    shape = RoundedCornerShape(28.dp),
                     color = MaterialTheme.colorScheme.primaryContainer
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                            .padding(18.dp),
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
                         Text(
                             text = "Datos reales, decisiones reales",
@@ -163,18 +159,15 @@ fun MoreHubItem(
     val enabled = FeatureFlags.isEnabled(feature)
 
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (enabled) {
                 MaterialTheme.colorScheme.surface
             } else {
-                MaterialTheme.colorScheme.surfaceVariant
+                MaterialTheme.colorScheme.surface
             }
         ),
-        border = androidx.compose.foundation.BorderStroke(
-            1.dp,
-            MaterialTheme.colorScheme.outline
-        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onFeatureClick(feature) }
@@ -186,18 +179,18 @@ fun MoreHubItem(
         ) {
             Box(
                 modifier = Modifier
-                    .size(44.dp)
+                    .size(52.dp)
                     .background(
                         if (enabled) {
                             MaterialTheme.colorScheme.primaryContainer
                         } else {
                             MaterialTheme.colorScheme.surfaceVariant
                         },
-                        RoundedCornerShape(12.dp)
+                        RoundedCornerShape(18.dp)
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Text(emoji, fontSize = 22.sp)
+                Text(emoji, fontSize = 24.sp)
             }
 
             Column(modifier = Modifier.weight(1f)) {

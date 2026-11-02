@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,14 +41,14 @@ fun PublishScreen(
     onPublished: () -> Unit = {},
     onShowToast: (String) -> Unit = {}
 ) {
-    var name by remember { mutableStateOf("") }
-    var species by remember { mutableStateOf(AnimalSpecies.DOG) }
-    var age by remember { mutableStateOf("") }
-    var breed by remember { mutableStateOf("") }
-    var location by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var specialNeeds by remember { mutableStateOf("") }
-    var selectedPhotoUri by remember { mutableStateOf<Uri?>(null) }
+    var name by rememberSaveable { mutableStateOf("") }
+    var species by rememberSaveable { mutableStateOf(AnimalSpecies.DOG) }
+    var age by rememberSaveable { mutableStateOf("") }
+    var breed by rememberSaveable { mutableStateOf("") }
+    var location by rememberSaveable { mutableStateOf("") }
+    var description by rememberSaveable { mutableStateOf("") }
+    var specialNeeds by rememberSaveable { mutableStateOf("") }
+    var selectedPhotoUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var isPublishing by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
@@ -58,16 +59,16 @@ fun PublishScreen(
         if (uri != null) selectedPhotoUri = uri
     }
 
-    var vaccinated by remember { mutableStateOf(false) }
-    var neutered by remember { mutableStateOf(false) }
-    var houseTrained by remember { mutableStateOf(false) }
+    var vaccinated by rememberSaveable { mutableStateOf(false) }
+    var neutered by rememberSaveable { mutableStateOf(false) }
+    var houseTrained by rememberSaveable { mutableStateOf(false) }
 
-    var goodWithKids by remember { mutableStateOf(true) }
-    var goodWithDogs by remember { mutableStateOf(true) }
-    var goodWithCats by remember { mutableStateOf(true) }
+    var goodWithKids by rememberSaveable { mutableStateOf(true) }
+    var goodWithDogs by rememberSaveable { mutableStateOf(true) }
+    var goodWithCats by rememberSaveable { mutableStateOf(true) }
 
-    var size by remember { mutableStateOf("Mediano") }
-    var energyLevel by remember { mutableStateOf("Media") }
+    var size by rememberSaveable { mutableStateOf("Mediano") }
+    var energyLevel by rememberSaveable { mutableStateOf("Media") }
 
     val toastMessage by viewModel.toastMessage.collectAsState()
     LaunchedEffect(toastMessage) {
@@ -83,35 +84,31 @@ fun PublishScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        Surface(
-            color = MaterialTheme.colorScheme.surface,
-            shadowElevation = 1.dp
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, end = 20.dp, top = 10.dp, bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 6.dp, end = 18.dp, top = 8.dp, bottom = 10.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = onClose) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "Cerrar",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                Column {
-                    Text(
-                        text = "Dar en adopción",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = "Una ficha clara encuentra hogar más rápido",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+            IconButton(onClick = onClose) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = "Cerrar",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+            Spacer(Modifier.width(4.dp))
+            Column {
+                Text(
+                    text = "Dar en adopción",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "Una ficha clara encuentra hogar más rápido",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
 
@@ -290,8 +287,8 @@ fun PublishScreen(
                 enabled = !isPublishing,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(18.dp),
+                    .height(58.dp),
+                shape = RoundedCornerShape(50),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
@@ -346,13 +343,13 @@ private fun PhotoPickerSection(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(190.dp)
-                .clip(RoundedCornerShape(18.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .height(210.dp)
+                .clip(RoundedCornerShape(28.dp))
+                .background(MaterialTheme.colorScheme.surface)
                 .border(
                     width = 1.dp,
                     color = MaterialTheme.colorScheme.outline,
-                    shape = RoundedCornerShape(18.dp)
+                    shape = RoundedCornerShape(28.dp)
                 )
                 .clickable(onClick = onPick),
             contentAlignment = Alignment.Center
@@ -386,9 +383,18 @@ private fun PhotoPickerSection(
             } else {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text("📷", fontSize = 32.sp)
+                    Surface(
+                        shape = RoundedCornerShape(20.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        modifier = Modifier.size(58.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text("📷", fontSize = 28.sp)
+                        }
+                    }
+                    Spacer(Modifier.height(2.dp))
                     Text(
                         text = "Agregar foto",
                         style = MaterialTheme.typography.titleMedium,
@@ -427,10 +433,10 @@ fun SegmentedControl(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(42.dp)
+            .height(48.dp)
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(16.dp)
             )
             .padding(4.dp)
     ) {
@@ -441,21 +447,21 @@ fun SegmentedControl(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
-                shape = RoundedCornerShape(9.dp),
+                shape = RoundedCornerShape(12.dp),
                 color = if (isSelected) {
-                    MaterialTheme.colorScheme.surface
+                    MaterialTheme.colorScheme.primary
                 } else {
                     androidx.compose.ui.graphics.Color.Transparent
                 },
-                shadowElevation = if (isSelected) 2.dp else 0.dp
+                shadowElevation = 0.dp
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Text(
                         text = option,
                         fontSize = 12.sp,
-                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
+                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
                         color = if (isSelected) {
-                            MaterialTheme.colorScheme.primary
+                            MaterialTheme.colorScheme.onPrimary
                         } else {
                             MaterialTheme.colorScheme.onSurfaceVariant
                         }

@@ -46,39 +46,34 @@ fun MyPetScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        Surface(
-            color = MaterialTheme.colorScheme.surface,
-            shadowElevation = 1.dp
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 20.dp, end = 12.dp, top = 16.dp, bottom = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 20.dp, end = 8.dp, top = 12.dp, bottom = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "Mi Mascota",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = if (myPets.isEmpty()) {
-                            "Tu espacio para dar en adopción"
-                        } else {
-                            "${myPets.size} publicación${if (myPets.size == 1) "" else "es"} activa${if (myPets.size == 1) "" else "s"}"
-                        },
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                IconButton(onClick = onOpenMore) {
-                    Icon(
-                        imageVector = Icons.Filled.Settings,
-                        contentDescription = "Más opciones",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Mi Mascota",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = if (myPets.isEmpty()) {
+                        "Tu espacio para dar en adopción"
+                    } else {
+                        "${myPets.size} publicación${if (myPets.size == 1) "" else "es"} activa${if (myPets.size == 1) "" else "s"}"
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            IconButton(onClick = onOpenMore) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = "Más opciones",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
 
@@ -92,7 +87,7 @@ fun MyPetScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary
                         ),
-                        shape = RoundedCornerShape(14.dp)
+                        shape = RoundedCornerShape(50)
                     ) {
                         Text("Registrar a mi mascota")
                     }
@@ -147,7 +142,7 @@ fun MyPetScreen(
                     OutlinedButton(
                         onClick = onPublish,
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(14.dp)
+                        shape = RoundedCornerShape(50)
                     ) {
                         Text("Publicar otra mascota")
                     }
@@ -176,24 +171,21 @@ private fun MyPetCard(dog: Dog, onClick: () -> Unit = {}, onShare: () -> Unit) {
 
     Card(
         modifier = Modifier.clickable(onClick = onClick),
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(26.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        border = androidx.compose.foundation.BorderStroke(
-            1.dp,
-            MaterialTheme.colorScheme.outline
-        )
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp),
+                .padding(15.dp),
             horizontalArrangement = Arrangement.spacedBy(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(74.dp)
-                    .background(fallbackColor, RoundedCornerShape(16.dp)),
+                    .size(82.dp)
+                    .background(fallbackColor, RoundedCornerShape(20.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 if (dog.imageUrl != null) {

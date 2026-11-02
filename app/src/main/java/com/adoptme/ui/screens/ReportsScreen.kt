@@ -126,8 +126,8 @@ fun ReportsScreen(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(50.dp),
-                        shape = RoundedCornerShape(14.dp),
+                            .height(54.dp),
+                        shape = RoundedCornerShape(50),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.error,
                             contentColor = MaterialTheme.colorScheme.onError
@@ -190,32 +190,27 @@ fun ReportsScreen(
 @Composable
 private fun MapPreviewCard() {
     Card(
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
-        border = androidx.compose.foundation.BorderStroke(
-            1.dp,
-            MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)
-        )
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(18.dp),
             horizontalArrangement = Arrangement.spacedBy(14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .size(46.dp)
-                    .background(
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.16f),
-                        RoundedCornerShape(14.dp)
-                    ),
-                contentAlignment = Alignment.Center
+            Surface(
+                shape = RoundedCornerShape(18.dp),
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.14f),
+                modifier = Modifier.size(52.dp)
             ) {
-                Text("🗺️", fontSize = 22.sp)
+                Box(contentAlignment = Alignment.Center) {
+                    Text("🗺️", fontSize = 24.sp)
+                }
             }
 
             Column(modifier = Modifier.weight(1f)) {
@@ -224,10 +219,11 @@ private fun MapPreviewCard() {
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
+                Spacer(Modifier.height(2.dp))
                 Text(
-                    text = "Los puntos de abandono, peligro y adopción se mostrarán en Google Maps cuando se configure la API key.",
+                    text = "Los puntos de abandono, peligro y adopción aparecerán cuando se configure el proveedor de mapas.",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.78f)
                 )
             }
 
@@ -240,7 +236,7 @@ private fun MapPreviewCard() {
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(horizontal = 9.dp, vertical = 4.dp)
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
                 )
             }
         }
@@ -257,25 +253,22 @@ fun ReportCard(report: Report) {
     }
 
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        border = androidx.compose.foundation.BorderStroke(
-            1.dp,
-            MaterialTheme.colorScheme.outline
-        )
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Row(
-            modifier = Modifier.padding(14.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(13.dp),
             verticalAlignment = Alignment.Top
         ) {
             Box(
                 modifier = Modifier
-                    .size(44.dp)
-                    .background(iconBg, RoundedCornerShape(12.dp)),
+                    .size(48.dp)
+                    .background(iconBg, RoundedCornerShape(16.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Text(report.type.emoji, fontSize = 20.sp)
+                Text(report.type.emoji, fontSize = 21.sp)
             }
 
             Column(
@@ -307,14 +300,14 @@ fun ReportCard(report: Report) {
                 )
 
                 Surface(
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(50),
                     color = MaterialTheme.colorScheme.surfaceVariant
                 ) {
                     Text(
                         text = "📍 ${report.location}",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
+                        modifier = Modifier.padding(horizontal = 9.dp, vertical = 5.dp)
                     )
                 }
             }

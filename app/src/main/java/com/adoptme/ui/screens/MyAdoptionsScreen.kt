@@ -4,7 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -69,9 +72,9 @@ fun MyAdoptionsScreen(
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(interestedDogs, key = { "${it.source}-${it.id}" }) { dog ->
@@ -108,15 +111,15 @@ fun InterestedDogCard(dog: Dog, onClick: () -> Unit = {}, onRemove: () -> Unit) 
 
     Card(
         modifier = Modifier.clickable(onClick = onClick),
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(26.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(110.dp)
+                    .height(132.dp)
                     .background(fallbackColor),
                 contentAlignment = Alignment.Center
             ) {
@@ -160,22 +163,40 @@ fun InterestedDogCard(dog: Dog, onClick: () -> Unit = {}, onRemove: () -> Unit) 
                     Surface(
                         modifier = Modifier
                             .align(Alignment.TopStart)
-                            .padding(8.dp),
+                            .padding(10.dp),
                         shape = RoundedCornerShape(50),
-                        color = Color.Black.copy(alpha = 0.55f)
+                        color = Color.Black.copy(alpha = 0.45f)
                     ) {
                         Text(
                             text = "Huachitos.cl",
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White,
-                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                        )
+                    }
+                }
+
+                Surface(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(10.dp)
+                        .size(32.dp),
+                    shape = CircleShape,
+                    color = Color.White.copy(alpha = 0.92f)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Filled.Favorite,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier.size(17.dp)
                         )
                     }
                 }
             }
 
             Column(
-                modifier = Modifier.padding(12.dp),
+                modifier = Modifier.padding(13.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(

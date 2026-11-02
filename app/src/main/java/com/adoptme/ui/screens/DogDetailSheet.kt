@@ -50,6 +50,7 @@ fun DogDetailSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
         dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
         LazyColumn(
@@ -165,14 +166,14 @@ fun DogDetailSheet(
 
                         dog.specialNeeds?.let { needs ->
                             Surface(
-                                shape = RoundedCornerShape(14.dp),
-                                color = MaterialTheme.colorScheme.errorContainer
+                                shape = RoundedCornerShape(18.dp),
+                                color = MaterialTheme.colorScheme.secondaryContainer
                             ) {
                                 Text(
                                     text = "⚠️ Necesidades especiales: $needs",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onErrorContainer,
-                                    modifier = Modifier.padding(12.dp)
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    modifier = Modifier.padding(14.dp)
                                 )
                             }
                         }
@@ -207,7 +208,7 @@ private fun DetailPhotoHeader(dog: Dog, onClose: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(240.dp)
+            .height(264.dp)
             .background(fallbackColor),
         contentAlignment = Alignment.Center
     ) {
@@ -298,7 +299,7 @@ private fun DetailTitle(dog: Dog) {
         ) {
             Text(
                 text = dog.name,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
@@ -375,18 +376,18 @@ private fun DetailAction(
         return
     }
 
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         if (isInterested) {
             OutlinedButton(
                 onClick = onToggleInterest,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
-                shape = RoundedCornerShape(14.dp)
+                    .height(54.dp),
+                shape = RoundedCornerShape(50)
             ) {
                 Text(
                     text = "Quitar de intereses",
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -395,8 +396,8 @@ private fun DetailAction(
                 onClick = onToggleInterest,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
-                shape = RoundedCornerShape(14.dp),
+                    .height(54.dp),
+                shape = RoundedCornerShape(50),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
@@ -404,9 +405,9 @@ private fun DetailAction(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_paw),
                     contentDescription = null,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(19.dp)
                 )
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(9.dp))
                 Text(
                     text = "Me interesa adoptar",
                     fontWeight = FontWeight.SemiBold
@@ -414,10 +415,16 @@ private fun DetailAction(
             }
         }
 
-        Text(
-            text = "Los intereses se guardan en este dispositivo. La adopción se coordina con la fuente o con quien publica.",
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        Surface(
+            shape = RoundedCornerShape(18.dp),
+            color = MaterialTheme.colorScheme.surfaceVariant
+        ) {
+            Text(
+                text = "Los intereses se guardan en este dispositivo. La adopción se coordina con la fuente o con quien publica.",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(13.dp)
+            )
+        }
     }
 }

@@ -78,23 +78,24 @@ app/src/main/java/com/adoptme/
 ├── ui/
 │   ├── components/                # Barra, tarjetas, chips, formularios
 │   ├── screens/                   # Una pantalla por destino
-│   └── theme/                     # Paleta Oliva & Arcilla
+│   └── theme/                     # Paleta Azul & Naranja + Poppins
 └── viewmodel/ScreenViewModels.kt
 ```
 
 ## Diseño
 
-Paleta **Oliva & Arcilla** con modo claro/oscuro:
+Paleta **Azul & Naranja** con modo claro/oscuro:
 
 | Token | Color |
 | :--- | :--- |
-| Primario | `#5A6B3B` |
-| Secundario (terracota) | `#A85A34` |
-| Fondo crema | `#FAF9F3` |
-| Peligro | `#B4433A` |
-| Abandono / advertencia | `#C98A2E` |
+| Primario (azul) | `#2F80ED` |
+| Secundario (naranja) | `#F47B2A` |
+| Fondo nube | `#F4F6FA` |
+| Tinta | `#111318` |
+| Peligro | `#E5484D` |
+| Advertencia | `#F2A93B` |
 
-Tipografía del sistema, formas redondeadas y componentes Material 3.
+Tipografía **Poppins** (SIL OFL 1.1, licencia en `app/src/main/assets/licenses/Poppins-OFL.txt`), cards de 24–32 dp, barra inferior flotante y componentes Material 3.
 
 ## Compilar y probar
 

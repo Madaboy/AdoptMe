@@ -9,6 +9,8 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,6 +31,7 @@ import com.adoptme.data.model.AnimalSource
 import com.adoptme.data.model.AnimalSpecies
 import com.adoptme.data.model.Dog
 import com.adoptme.ui.components.*
+import com.adoptme.ui.theme.OrangeAccent
 import com.adoptme.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -66,7 +69,8 @@ fun HomeScreen(
         HomeTopBar(
             remaining = remaining,
             selectedSpecies = speciesFilter,
-            onSpeciesSelected = viewModel::setSpeciesFilter
+            onSpeciesSelected = viewModel::setSpeciesFilter,
+            onRefresh = viewModel::loadDogs
         )
 
         when {
@@ -81,7 +85,11 @@ fun HomeScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(14.dp)
                     ) {
-                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.primary,
+                            strokeWidth = 3.dp,
+                            modifier = Modifier.size(42.dp)
+                        )
                         Text(
                             text = "Buscando mascotas en Huachitos.cl…",
                             style = MaterialTheme.typography.bodyMedium,
@@ -94,10 +102,11 @@ fun HomeScreen(
             errorMessage != null -> {
                 EmptyState(
                     message = "No pudimos cargar el catálogo",
-                    subMessage = errorMessage!!,
+                    subMessage = errorMessage ?: "Revisa tu conexión e inténtalo de nuevo.",
                     action = {
                         Button(
                             onClick = viewModel::loadDogs,
+                            shape = RoundedCornerShape(50),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary
                             )
@@ -118,11 +127,17 @@ fun HomeScreen(
                     },
                     action = {
                         if (speciesFilter != null) {
-                            OutlinedButton(onClick = { viewModel.setSpeciesFilter(null) }) {
+                            OutlinedButton(
+                                onClick = { viewModel.setSpeciesFilter(null) },
+                                shape = RoundedCornerShape(50)
+                            ) {
                                 Text("Ver todos")
                             }
                         } else {
-                            OutlinedButton(onClick = viewModel::loadDogs) {
+                            OutlinedButton(
+                                onClick = viewModel::loadDogs,
+                                shape = RoundedCornerShape(50)
+                            ) {
                                 Text("Actualizar catálogo")
                             }
                         }
@@ -135,7 +150,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                        .padding(horizontal = 18.dp, vertical = 8.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     val nextDog = dogs.getOrNull(currentIndex + 1)
@@ -147,7 +162,8 @@ fun HomeScreen(
                                 .graphicsLayer(
                                     scaleX = 0.94f,
                                     scaleY = 0.94f,
-                                    translationY = 18f
+                                    translationY = 20f,
+                                    alpha = 0.62f
                                 ),
                             onLike = {},
                             onPass = {},
@@ -171,7 +187,6 @@ fun HomeScreen(
                     onPass = viewModel::onPass,
                     onLike = viewModel::onLike
                 )
-                Spacer(Modifier.height(4.dp))
             }
         }
     }
@@ -200,67 +215,91 @@ fun HomeScreen(
 fun HomeTopBar(
     remaining: Int,
     selectedSpecies: AnimalSpecies?,
-    onSpeciesSelected: (AnimalSpecies?) -> Unit
+    onSpeciesSelected: (AnimalSpecies?) -> Unit,
+    onRefresh: () -> Unit = {}
 ) {
-    Surface(
-        color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 1.dp
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 14.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        Column(
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier.size(46.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Text("🐾", fontSize = 22.sp)
+                }
+            }
+            Spacer(Modifier.width(11.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "AdoptMe",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = "Mascotas reales",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Surface(
+                shape = RoundedCornerShape(50),
+                color = MaterialTheme.colorScheme.primaryContainer
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Text(
+                        text = if (remaining > 0) "$remaining" else "0",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "por descubrir",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                    )
+                }
+            }
+            Spacer(Modifier.width(8.dp))
+            SoftIconButton(
+                icon = Icons.Filled.Refresh,
+                contentDescription = "Actualizar catálogo",
+                onClick = onRefresh
+            )
+        }
+
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 18.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Text("🐾", fontSize = 20.sp)
-                    Text(
-                        text = "AdoptMe",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-
-                Surface(
-                    shape = RoundedCornerShape(50),
-                    color = MaterialTheme.colorScheme.primaryContainer
-                ) {
-                    Text(
-                        text = if (remaining > 0) "$remaining por descubrir" else "Catálogo al día",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
-                    )
-                }
-            }
-
-            Row(
-                modifier = Modifier.horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
+            SpeciesChip(
+                label = "Todos",
+                emoji = "🐾",
+                selected = selectedSpecies == null,
+                onClick = { onSpeciesSelected(null) }
+            )
+            AnimalSpecies.entries.forEach { species ->
                 SpeciesChip(
-                    label = "Todos",
-                    emoji = "🐾",
-                    selected = selectedSpecies == null,
-                    onClick = { onSpeciesSelected(null) }
+                    label = species.label + "s",
+                    emoji = species.emoji,
+                    selected = selectedSpecies == species,
+                    onClick = { onSpeciesSelected(species) }
                 )
-                AnimalSpecies.entries.forEach { species ->
-                    SpeciesChip(
-                        label = species.label + "s",
-                        emoji = species.emoji,
-                        selected = selectedSpecies == species,
-                        onClick = { onSpeciesSelected(species) }
-                    )
-                }
             }
+            Spacer(Modifier.width(8.dp))
         }
     }
 }
@@ -272,24 +311,27 @@ private fun SpeciesChip(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    FilterChip(
-        selected = selected,
+    Surface(
         onClick = onClick,
-        label = {
-            Text(
-                text = "$emoji $label",
-                style = MaterialTheme.typography.labelLarge
-            )
-        },
         shape = RoundedCornerShape(50),
-        colors = FilterChipDefaults.filterChipColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            selectedContainerColor = MaterialTheme.colorScheme.primary,
-            selectedLabelColor = MaterialTheme.colorScheme.onPrimary
-        ),
-        border = null
-    )
+        color = if (selected) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.surface
+        },
+        shadowElevation = if (selected) 0.dp else 1.dp
+    ) {
+        Text(
+            text = "$emoji $label",
+            style = MaterialTheme.typography.labelLarge,
+            color = if (selected) {
+                MaterialTheme.colorScheme.onPrimary
+            } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            },
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp)
+        )
+    }
 }
 
 @Composable
@@ -303,10 +345,10 @@ fun DogCard(
     isBackground: Boolean
 ) {
     var dragOffset by remember { mutableStateOf(0f) }
-    val rotation = (dragOffset / 22f).coerceIn(-14f, 14f)
+    val rotation = (dragOffset / 24f).coerceIn(-12f, 12f)
     val fallbackColor = remember(dog.backgroundColorHex) {
         runCatching { Color(android.graphics.Color.parseColor(dog.backgroundColorHex)) }
-            .getOrDefault(Color(0xFFEFEEE4))
+            .getOrDefault(Color(0xFFE9EDF4))
     }
 
     Card(
@@ -334,9 +376,11 @@ fun DogCard(
                     Modifier
                 }
             ),
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(32.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = if (isBackground) 0.dp else 3.dp)
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = if (isBackground) 0.dp else 5.dp
+        )
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Box(
@@ -350,8 +394,7 @@ fun DogCard(
                             Modifier
                         }
                     )
-                    .background(fallbackColor),
-                contentAlignment = Alignment.Center
+                    .background(fallbackColor)
             ) {
                 if (dog.imageUrl != null) {
                     SubcomposeAsyncImage(
@@ -369,7 +412,7 @@ fun DogCard(
                                 CircularProgressIndicator(
                                     color = MaterialTheme.colorScheme.primary,
                                     strokeWidth = 2.dp,
-                                    modifier = Modifier.size(26.dp)
+                                    modifier = Modifier.size(28.dp)
                                 )
                             }
                         },
@@ -380,44 +423,48 @@ fun DogCard(
                                     .background(fallbackColor),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(dog.emoji, fontSize = 72.sp)
+                                Text(dog.emoji, fontSize = 76.sp)
                             }
                         },
-                        success = {
-                            SubcomposeAsyncImageContent()
-                        }
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        Color.Black.copy(alpha = 0.28f)
-                                    ),
-                                    startY = 220f
-                                )
-                            )
+                        success = { SubcomposeAsyncImageContent() }
                     )
                 } else {
-                    Text(dog.emoji, fontSize = 80.sp)
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(dog.emoji, fontSize = 86.sp)
+                    }
                 }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    Color.Transparent,
+                                    Color.Black.copy(alpha = 0.72f)
+                                ),
+                                startY = 80f
+                            )
+                        )
+                )
 
                 if (dog.source == AnimalSource.HUACHITOS) {
                     Surface(
                         modifier = Modifier
                             .align(Alignment.TopStart)
-                            .padding(12.dp),
+                            .padding(14.dp),
                         shape = RoundedCornerShape(50),
-                        color = Color.Black.copy(alpha = 0.55f)
+                        color = Color.Black.copy(alpha = 0.42f)
                     ) {
                         Text(
                             text = "Huachitos.cl",
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                            modifier = Modifier.padding(horizontal = 11.dp, vertical = 5.dp)
                         )
                     }
                 }
@@ -426,51 +473,50 @@ fun DogCard(
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
-                            .padding(12.dp)
+                            .padding(14.dp)
                     ) {
                         DistanceBadge(dog.distanceKm)
                     }
                 }
-            }
 
-            Column(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(7.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(horizontal = 20.dp, vertical = 18.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
+                    Surface(
+                        shape = RoundedCornerShape(50),
+                        color = Color.White.copy(alpha = 0.18f)
+                    ) {
+                        Text(
+                            text = dog.species.label,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                        )
+                    }
                     Text(
                         text = dog.name,
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Color.White,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
+                        overflow = TextOverflow.Ellipsis
                     )
-                    Text(
-                        text = dog.species.label,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text("📍", fontSize = 11.sp)
                     Text(
                         text = dog.location.ifBlank { "Ubicación no informada" },
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White.copy(alpha = 0.85f),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+            }
 
+            Column(
+                modifier = Modifier.padding(horizontal = 18.dp, vertical = 14.dp),
+                verticalArrangement = Arrangement.spacedBy(9.dp)
+            ) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -487,8 +533,8 @@ fun DogCard(
                     dog.energyLevel?.let {
                         InfoChip(
                             text = "⚡ $it",
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            textColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                            textColor = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                     }
                     dog.vaccinated?.let { vaccinated ->
@@ -521,22 +567,18 @@ fun DogCard(
                     TextButton(
                         onClick = onOpenDetail,
                         contentPadding = PaddingValues(0.dp),
-                        modifier = Modifier.height(28.dp)
+                        modifier = Modifier.heightIn(min = 48.dp)
                     ) {
                         Text(
-                            text = "Ver ficha completa  →",
+                            text = "Ver ficha completa",
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
-
                 if (dog.source == AnimalSource.HUACHITOS) {
-                    SourceAttribution(
-                        sourceName = "Huachitos.cl",
-                        sourceUrl = dog.sourceUrl
-                    )
+                    SourceAttribution(sourceName = "Huachitos.cl", sourceUrl = dog.sourceUrl)
                 }
             }
         }

@@ -234,7 +234,7 @@ app/src/main/java/com/adoptme/
 ├── ui/
 │   ├── components/                # Barra inferior, chips, formularios, toasts
 │   ├── screens/                   # Home, Publish, Reports, Interests, MyPet, More
-│   └── theme/Theme.kt             # Paleta Oliva & Arcilla
+│   └── theme/Theme.kt             # Paleta Azul & Naranja + Poppins
 └── viewmodel/ScreenViewModels.kt
 ```
 
@@ -293,17 +293,18 @@ app/src/test/java/com/adoptme/
 
 ## 9. Diseño y estilo
 
-Paleta **Oliva & Arcilla**:
+Paleta **Azul & Naranja**:
 
 | Token | Color |
 |---|---|
-| Primario | `#5A6B3B` |
-| Secundario / terracota | `#A85A34` |
-| Fondo crema | `#FAF9F3` |
-| Peligro | `#B4433A` |
-| Advertencia / abandono | `#C98A2E` |
+| Primario (azul) | `#2F80ED` |
+| Secundario (naranja) | `#F47B2A` |
+| Fondo nube | `#F4F6FA` |
+| Tinta | `#111318` |
+| Peligro | `#E5484D` |
+| Advertencia | `#F2A93B` |
 
-- Material 3, formas redondeadas, tipografía del sistema.
+- Material 3, tipografía **Poppins**, cards de 24–32 dp y barra inferior flotante.
 - Modo claro y oscuro.
 - UI en **español de Chile**; nombres de código en inglés.
 - Mantén consistencia con los componentes existentes antes de crear nuevos.

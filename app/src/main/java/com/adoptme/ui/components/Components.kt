@@ -5,7 +5,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -16,12 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.adoptme.ui.theme.OrangeAccent
 import kotlinx.coroutines.delay
 
 // -------------------------------------------------------------------------
@@ -33,36 +34,31 @@ fun ScreenHeader(
     subtitle: String,
     trailing: (@Composable () -> Unit)? = null
 ) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 1.dp
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            trailing?.invoke()
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
+        trailing?.invoke()
     }
 }
 
 // -------------------------------------------------------------------------
-// TEXT FIELD estilizado
+// TEXT FIELD moderno
 // -------------------------------------------------------------------------
 @Composable
 fun AdoptMeTextField(
@@ -74,7 +70,7 @@ fun AdoptMeTextField(
     height: Int? = null,
     trailingIcon: (@Composable () -> Unit)? = null
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(7.dp)) {
         Text(
             text = label,
             style = MaterialTheme.typography.labelLarge,
@@ -90,11 +86,11 @@ fun AdoptMeTextField(
                 Text(
                     text = placeholder,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 )
             },
             singleLine = singleLine,
-            shape = MaterialTheme.shapes.small,
+            shape = RoundedCornerShape(18.dp),
             trailingIcon = trailingIcon,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -110,25 +106,29 @@ fun AdoptMeTextField(
 }
 
 // -------------------------------------------------------------------------
-// SWITCH ROW estilizado
+// SWITCH ROW
 // -------------------------------------------------------------------------
 @Composable
 fun AdoptMeSwitchRow(label: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.weight(1f)
         )
+        Spacer(Modifier.width(12.dp))
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(
-                checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                checkedThumbColor = Color.White,
                 checkedTrackColor = MaterialTheme.colorScheme.primary,
                 uncheckedThumbColor = MaterialTheme.colorScheme.outline,
                 uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
@@ -138,18 +138,17 @@ fun AdoptMeSwitchRow(label: String, checked: Boolean, onCheckedChange: (Boolean)
 }
 
 // -------------------------------------------------------------------------
-// CARD SECTION para formularios
+// CARD SECTION
 // -------------------------------------------------------------------------
 @Composable
 fun AdoptMeCardSection(title: String, content: @Composable ColumnScope.() -> Unit) {
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+        shape = RoundedCornerShape(26.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(18.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Text(
@@ -163,7 +162,7 @@ fun AdoptMeCardSection(title: String, content: @Composable ColumnScope.() -> Uni
 }
 
 // -------------------------------------------------------------------------
-// CHIP de información (edad, vacunas, etc.)
+// CHIPS
 // -------------------------------------------------------------------------
 @Composable
 fun InfoChip(
@@ -180,7 +179,7 @@ fun InfoChip(
             text = text,
             style = MaterialTheme.typography.labelSmall,
             color = textColor,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+            modifier = Modifier.padding(horizontal = 11.dp, vertical = 6.dp)
         )
     }
 }
@@ -193,7 +192,7 @@ fun StatusChip(text: String, containerColor: Color, textColor: Color) {
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.SemiBold,
             color = textColor,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
         )
     }
 }
@@ -208,7 +207,7 @@ fun DistanceBadge(distanceKm: Double) {
         color = MaterialTheme.colorScheme.primaryContainer
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 9.dp, vertical = 4.dp),
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -223,7 +222,7 @@ fun DistanceBadge(distanceKm: Double) {
 }
 
 // -------------------------------------------------------------------------
-// TEXTO EXPANDIBLE (descripciones largas de Huachitos)
+// TEXTO EXPANDIBLE
 // -------------------------------------------------------------------------
 @Composable
 fun ExpandableText(
@@ -253,7 +252,7 @@ fun ExpandableText(
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .padding(top = 4.dp)
+                    .padding(top = 5.dp)
                     .clickable { expanded = !expanded }
             )
         }
@@ -261,7 +260,7 @@ fun ExpandableText(
 }
 
 // -------------------------------------------------------------------------
-// ATRIBUCIÓN de la fuente externa
+// ATRIBUCIÓN de fuente
 // -------------------------------------------------------------------------
 @Composable
 fun SourceAttribution(sourceName: String, sourceUrl: String?) {
@@ -291,7 +290,7 @@ fun SourceAttribution(sourceName: String, sourceUrl: String?) {
 }
 
 // -------------------------------------------------------------------------
-// TOAST — Mensaje temporal en pantalla
+// TOAST / snackbar flotante
 // -------------------------------------------------------------------------
 @Composable
 fun AdoptMeToast(
@@ -315,7 +314,7 @@ fun AdoptMeToast(
                 .padding(horizontal = 20.dp)
                 .clip(RoundedCornerShape(18.dp))
                 .background(MaterialTheme.colorScheme.inverseSurface)
-                .padding(horizontal = 20.dp, vertical = 12.dp),
+                .padding(horizontal = 18.dp, vertical = 13.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -329,26 +328,26 @@ fun AdoptMeToast(
 }
 
 // -------------------------------------------------------------------------
-// BOTÓN CIRCULAR de acción
+// BOTÓN circular de acción
 // -------------------------------------------------------------------------
 @Composable
 fun CircleActionButton(
     emoji: String,
-    size: Int = 52,
+    size: Int = 58,
     containerColor: Color = MaterialTheme.colorScheme.surface,
-    borderColor: Color = MaterialTheme.colorScheme.outline,
+    borderColor: Color = Color.Transparent,
     onClick: () -> Unit
 ) {
     Surface(
         onClick = onClick,
         shape = CircleShape,
         color = containerColor,
-        border = BorderStroke(1.dp, borderColor),
-        shadowElevation = 2.dp,
+        border = if (borderColor == Color.Transparent) null else BorderStroke(1.dp, borderColor),
+        shadowElevation = 6.dp,
         modifier = Modifier.size(size.dp)
     ) {
         Box(contentAlignment = Alignment.Center) {
-            Text(emoji, fontSize = (size / 2.5).sp)
+            Text(emoji, fontSize = (size / 2.6).sp)
         }
     }
 }
@@ -361,33 +360,64 @@ fun ActionButtons(onPass: () -> Unit, onLike: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         CircleActionButton(
             emoji = "✕",
-            size = 58,
+            size = 60,
+            containerColor = MaterialTheme.colorScheme.surface,
+            borderColor = MaterialTheme.colorScheme.outline,
             onClick = onPass
         )
 
-        Spacer(Modifier.width(36.dp))
+        Spacer(Modifier.width(30.dp))
 
         Surface(
             onClick = onLike,
             shape = CircleShape,
-            color = MaterialTheme.colorScheme.primary,
-            shadowElevation = 8.dp,
-            modifier = Modifier.size(70.dp)
+            color = OrangeAccent,
+            shadowElevation = 10.dp,
+            modifier = Modifier.size(76.dp)
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Icon(
                     painter = androidx.compose.ui.res.painterResource(id = com.adoptme.R.drawable.ic_paw),
                     contentDescription = "Me interesa adoptar",
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(30.dp)
+                    tint = Color.White,
+                    modifier = Modifier.size(32.dp)
                 )
             }
+        }
+    }
+}
+
+// -------------------------------------------------------------------------
+// BOTÓN de icono suave (header)
+// -------------------------------------------------------------------------
+@Composable
+fun SoftIconButton(
+    icon: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+    tint: Color = MaterialTheme.colorScheme.onSurface
+) {
+    Surface(
+        onClick = onClick,
+        shape = CircleShape,
+        color = containerColor,
+        shadowElevation = 2.dp,
+        modifier = Modifier.size(48.dp)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(
+                imageVector = icon,
+                contentDescription = contentDescription,
+                tint = tint,
+                modifier = Modifier.size(21.dp)
+            )
         }
     }
 }
@@ -408,20 +438,29 @@ fun EmptyState(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("🐾", fontSize = 56.sp)
-        Spacer(Modifier.height(12.dp))
+        Surface(
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primaryContainer,
+            modifier = Modifier.size(88.dp)
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Text("🐾", fontSize = 38.sp)
+            }
+        }
+        Spacer(Modifier.height(18.dp))
         Text(
             text = message,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurface
         )
+        Spacer(Modifier.height(6.dp))
         Text(
             text = subMessage,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         if (action != null) {
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(22.dp))
             action()
         }
     }
@@ -434,8 +473,8 @@ fun EmptyState(
 fun SectionTitle(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
-        style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onSurface,
         modifier = modifier
     )
 }
