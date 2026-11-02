@@ -1,0 +1,141 @@
+# AdoptMe 🐾
+
+Aplicación Android de adopción responsable de mascotas. El catálogo se alimenta en vivo desde **Huachitos.cl** y la app prioriza un principio simple: **ningún dato simulado**. Si la fuente no entrega un dato, no se inventa.
+
+## Estado actual
+
+Fase 0 completada en lo funcional:
+
+- Catálogo real de Huachitos.cl con paginación, fotos y descripciones.
+- Navegación Compose con 5 posiciones y acción central de publicación.
+- ViewModel por pantalla y repositorio como interfaz.
+- Persistencia local de intereses, publicaciones propias y reportes.
+- Publicación con foto desde el selector del sistema, sin permisos de almacenamiento.
+- Ficha de detalle completa en hoja inferior, accesible desde Adoptar, Intereses y Mi Mascota.
+- Sin datos de ejemplo visibles en producción.
+- Tests unitarios, lint sin errores y CI de GitHub Actions.
+
+Pendiente de infraestructura: Supabase, Google Maps, Crashlytics y sincronización entre dispositivos.
+
+## Funcionalidades
+
+| Sección | Estado |
+| :--- | :--- |
+| **Adoptar** | Catálogo real, filtros por especie, swipe, ficha de detalle y guardado de intereses |
+| **Reportes** | Crear y listar reportes locales; mapa real pendiente |
+| **Publicar** | Ficha de adopción con foto, especie, edad, salud, convivencia y descripción |
+| **Intereses** | Mascotas guardadas, ficha de detalle, eliminar interés, badge en la barra |
+| **Mi Mascota** | Publicaciones propias con foto y ficha de detalle, acceso a ajustes |
+| **Más** | Funcionalidades futuras con Feature Flags |
+
+El botón central **Publicar** es una cápsula ovalada con el icono hogar + corazón. No es una pestaña y no usa “+”: publicar una adopción es un acto de cuidado.
+
+## Arquitectura
+
+```text
+UI (Jetpack Compose)
+        │
+        ▼
+ViewModel por pantalla (StateFlow)
+        │
+        ▼
+DogRepository (interfaz)
+        │
+        ├── HuachitosApiService (Retrofit + Gson)
+        └── LocalDataSource (DataStore + caché en memoria)
+```
+
+- **AppContainer** (`core/di`): inyección manual con una única instancia del repositorio.
+- **LocalDataSource**: mantiene el estado inmediato en memoria y lo persiste en DataStore.
+- **PersistedState v1**: intereses, publicaciones propias y reportes.
+- **HtmlText**: limpia el HTML de Huachitos con Jsoup antes de mostrarlo.
+- **PetImageStore**: copia la foto elegida a `filesDir/pet_images` y guarda un URI `file://` en la publicación.
+- **DogDetailSheet**: ficha completa en `ModalBottomSheet`, sin ruta de navegación adicional.
+- **Regla de datos**: los campos ausentes quedan en `null`; la UI los omite o muestra “No informado”.
+
+### Estructura principal
+
+```text
+app/src/main/java/com/adoptme/
+├── AdoptMeApplication.kt          # Inicializa AppContainer
+├── MainActivity.kt                # Scaffold, barra inferior y toasts
+├── core/
+│   ├── common/HtmlText.kt
+│   ├── di/AppContainer.kt
+│   ├── media/PetImageStore.kt       # Copia de fotos al almacenamiento interno
+│   └── navigation/                # Rutas + NavHost
+├── data/
+│   ├── api/                       # Retrofit
+│   ├── datasource/                # DataStore y estado local
+│   ├── model/                     # Dog, Report, contrato Huachitos
+│   └── repository/
+├── ui/
+│   ├── components/                # Barra, tarjetas, chips, formularios
+│   ├── screens/                   # Una pantalla por destino
+│   └── theme/                     # Paleta Oliva & Arcilla
+└── viewmodel/ScreenViewModels.kt
+```
+
+## Diseño
+
+Paleta **Oliva & Arcilla** con modo claro/oscuro:
+
+| Token | Color |
+| :--- | :--- |
+| Primario | `#5A6B3B` |
+| Secundario (terracota) | `#A85A34` |
+| Fondo crema | `#FAF9F3` |
+| Peligro | `#B4433A` |
+| Abandono / advertencia | `#C98A2E` |
+
+Tipografía del sistema, formas redondeadas y componentes Material 3.
+
+## Compilar y probar
+
+Requisitos: Android SDK 35 y **JDK 21**. El proyecto fija el daemon de Gradle a JDK 21 porque el lint de AGP 8.7 no es compatible con Java 25.
+
+```bash
+export JAVA_HOME=/ruta/a/jdk-21
+export PATH="$JAVA_HOME/bin:$PATH"
+
+./gradlew assembleDebug testDebugUnitTest lintDebug
+```
+
+Salida:
+
+- APK: `app/build/outputs/apk/debug/app-debug.apk`
+- Tests: 13 pruebas unitarias
+- Lint: 0 errores
+
+## Tests cubiertos
+
+- Contrato real de Huachitos.cl y mapeo de especies.
+- Limpieza de HTML y entidades.
+- Paginación, filtro por estado y deduplicación.
+- Intereses sin duplicados y eliminación.
+- Persistencia de intereses, mascotas, reportes y ruta de la foto entre instancias.
+- Recuperación ante estado local corrupto.
+
+## Integración continua
+
+`.github/workflows/android.yml` ejecuta en cada push y pull request:
+
+1. JDK 21 (JetBrains Runtime) y Android SDK.
+2. `./gradlew assembleDebug testDebugUnitTest lintDebug`.
+3. Publica el APK debug como artefacto descargable.
+
+## Limitaciones conocidas
+
+- Las publicaciones, intereses y reportes son locales: no se sincronizan entre dispositivos.
+- Las fotos se copian al almacenamiento privado del dispositivo y no se suben a la nube.
+- No hay registro/login todavía; requiere Supabase Auth.
+- El mapa de Google Maps está pendiente de API key.
+- Las secciones de chat, comunidad, tienda y gamificación están deshabilitadas por Feature Flags.
+
+## Próximos pasos
+
+1. Supabase: Auth, Postgres, Storage y RLS.
+2. Sincronización de publicaciones, intereses y fotos entre dispositivos.
+3. Contacto y coordinación de adopciones dentro de la app.
+4. Google Maps con reportes y lugares pet-friendly.
+5. Crashlytics y métricas de uso.
