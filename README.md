@@ -17,6 +17,12 @@ Fase 0 completada en lo funcional:
 
 Pendiente de infraestructura: Supabase, Google Maps, Crashlytics y sincronización entre dispositivos.
 
+## Repositorio y colaboración
+
+- Repositorio privado: [github.com/Madaboy/AdoptMe](https://github.com/Madaboy/AdoptMe)
+- Contexto completo para agentes: [AGENTS.md](AGENTS.md)
+- Prompt de arranque para una sesión nueva: [docs/PROMPT_AGENTE.md](docs/PROMPT_AGENTE.md)
+
 ## Funcionalidades
 
 | Sección | Estado |
