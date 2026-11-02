@@ -7,7 +7,7 @@ Aplicación Android de adopción responsable de mascotas. El catálogo se alimen
 Fase 0 completada en lo funcional:
 
 - Catálogo real de Huachitos.cl con paginación, fotos y descripciones.
-- Navegación Compose con 5 posiciones y acción central de publicación.
+- Navegación Compose con 5 posiciones y acción central de adopción.
 - ViewModel por pantalla y repositorio como interfaz.
 - Persistencia local de intereses, publicaciones propias y reportes.
 - Publicación con foto desde el selector del sistema, sin permisos de almacenamiento.
@@ -34,7 +34,7 @@ Pendiente de infraestructura: Supabase, Google Maps, Crashlytics y sincronizaci�
 | **Mi Mascota** | Publicaciones propias con foto y ficha de detalle, acceso a ajustes |
 | **Más** | Funcionalidades futuras con Feature Flags |
 
-El botón central **Publicar** es una cápsula ovalada con el icono hogar + corazón. No es una pestaña y no usa “+”: publicar una adopción es un acto de cuidado.
+El botón central **Adoptar** es una cápsula ovalada con la huella. **Publicar** ocupa la primera posición de la barra y abre el formulario a pantalla completa; no usa “+”: publicar una adopción es un acto de cuidado.
 
 ## Arquitectura
 

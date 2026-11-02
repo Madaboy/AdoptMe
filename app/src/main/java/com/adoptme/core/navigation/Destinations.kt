@@ -2,7 +2,7 @@ package com.adoptme.core.navigation
 
 /**
  * Rutas de navegación fuertemente tipadas.
- * La barra inferior tiene 4 destinos; "Publicar" es la acción ovalada central.
+ * La barra inferior tiene 4 destinos; "Adoptar" es la acción ovalada central.
  */
 sealed class Screen(val route: String, val label: String) {
     object Adopt : Screen("adopt", "Adoptar")
@@ -14,7 +14,7 @@ sealed class Screen(val route: String, val label: String) {
 }
 
 val bottomNavItems = listOf(
-    Screen.Adopt,
+    Screen.Publish,
     Screen.Reports,
     Screen.Interests,
     Screen.MyPet

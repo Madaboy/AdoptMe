@@ -55,17 +55,16 @@ fun AdoptMeApp() {
                     currentRoute = currentRoute,
                     interestCount = interestedDogs.size,
                     onNavigate = { screen ->
-                        if (currentRoute != screen.route) {
+                        if (screen == Screen.Publish) {
+                            navController.navigate(Screen.Publish.route) {
+                                launchSingleTop = true
+                            }
+                        } else if (currentRoute != screen.route) {
                             navController.navigate(screen.route) {
                                 popUpTo(Screen.Adopt.route) { saveState = true }
                                 launchSingleTop = true
                                 restoreState = true
                             }
-                        }
-                    },
-                    onPublish = {
-                        navController.navigate(Screen.Publish.route) {
-                            launchSingleTop = true
                         }
                     }
                 )

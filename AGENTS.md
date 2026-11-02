@@ -61,7 +61,7 @@ sincronización entre dispositivos, mapas reales ni notificaciones push.
 - Catálogo real de Huachitos.cl con paginación, fotos, descripciones y filtro
   por especie.
 - Navegación Compose con 4 destinos inferiores y una acción central de
-  publicación.
+  adopción.
 - Publicación de mascota con foto desde el Photo Picker del sistema.
 - Ficha de detalle completa en `ModalBottomSheet`.
 - Intereses persistentes en DataStore.
@@ -265,9 +265,10 @@ app/src/test/java/com/adoptme/
 
 ### Navegación
 
-- Barra inferior: **Adoptar · Reportes · [Publicar] · Intereses · Mi Mascota**.
-- “Publicar” es una **cápsula ovalada central**, no una pestaña. Abre el
-  formulario a pantalla completa.
+- Barra inferior: **Publicar · Reportes · [Adoptar] · Intereses · Mi Mascota**.
+- “Adoptar” es la **cápsula ovalada central** y la acción principal: abre el
+  catálogo de mascotas.
+- “Publicar” ocupa la primera posición y abre el formulario a pantalla completa.
 - “Más” se abre desde Mi Mascota; no ocupa una posición en la barra.
 - No cambies la navegación a una barra de 5 pestañas.
 - No uses “+” para publicar: el icono es casa + corazón.

@@ -29,17 +29,16 @@ import com.adoptme.core.navigation.Screen
 /**
  * Barra inferior de 5 posiciones.
  *
- * Adoptar · Reportes · [Publicar] · Intereses · Mi Mascota
+ * Publicar · Reportes · [Adoptar] · Intereses · Mi Mascota
  *
- * "Publicar" no es una pestaña: es la acción central ovalada que abre el
- * formulario de adopción a pantalla completa.
+ * "Adoptar" es la acción central ovalada que abre el catálogo.
+ * "Publicar" ocupa la primera posición y abre el formulario a pantalla completa.
  */
 @Composable
 fun AdoptMeBottomBar(
     currentRoute: String?,
     interestCount: Int,
-    onNavigate: (Screen) -> Unit,
-    onPublish: () -> Unit
+    onNavigate: (Screen) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -65,10 +64,10 @@ fun AdoptMeBottomBar(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 BottomBarItem(
-                    screen = Screen.Adopt,
+                    screen = Screen.Publish,
                     currentRoute = currentRoute,
-                    icon = painterResource(R.drawable.ic_paw),
-                    onClick = { onNavigate(Screen.Adopt) }
+                    icon = painterResource(R.drawable.ic_publish_adoption),
+                    onClick = { onNavigate(Screen.Publish) }
                 )
                 BottomBarItem(
                     screen = Screen.Reports,
@@ -96,9 +95,9 @@ fun AdoptMeBottomBar(
             }
         }
 
-        PublishCapsule(
+        AdoptCapsule(
             modifier = Modifier.align(Alignment.TopCenter),
-            onClick = onPublish
+            onClick = { onNavigate(Screen.Adopt) }
         )
         }
     }
@@ -177,11 +176,11 @@ private fun RowScope.BottomBarItem(
 }
 
 /**
- * Cápsula ovalada "Publicar" con el icono de hogar + corazón.
- * Nunca usa "+": publicar una adopción es un acto de cuidado, no una suma.
+ * Cápsula ovalada "Adoptar" con la huella.
+ * Es la acción principal de la barra: descubrir mascotas que buscan hogar.
  */
 @Composable
-private fun PublishCapsule(
+private fun AdoptCapsule(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -199,14 +198,14 @@ private fun PublishCapsule(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_publish_adoption),
+                painter = painterResource(R.drawable.ic_paw),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(19.dp)
             )
             Spacer(Modifier.width(5.dp))
             Text(
-                text = "Publicar",
+                text = "Adoptar",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onPrimary
