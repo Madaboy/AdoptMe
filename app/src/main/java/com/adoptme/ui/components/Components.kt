@@ -9,6 +9,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -355,9 +357,13 @@ fun CircleActionButton(
 // BOTONES DE ACCIÓN (Home)
 // -------------------------------------------------------------------------
 @Composable
-fun ActionButtons(onPass: () -> Unit, onLike: () -> Unit) {
+fun ActionButtons(
+    onPass: () -> Unit,
+    onLike: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.Center,
@@ -382,7 +388,7 @@ fun ActionButtons(onPass: () -> Unit, onLike: () -> Unit) {
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Icon(
-                    painter = androidx.compose.ui.res.painterResource(id = com.adoptme.R.drawable.ic_paw),
+                    imageVector = Icons.Filled.Favorite,
                     contentDescription = "Me interesa adoptar",
                     tint = Color.White,
                     modifier = Modifier.size(32.dp)

@@ -58,7 +58,8 @@ sincronización entre dispositivos, mapas reales ni notificaciones push.
 
 ### Funciona
 
-- Catálogo real de Huachitos.cl con paginación, fotos y descripciones.
+- Catálogo real de Huachitos.cl con paginación, fotos y descripciones en una
+  tarjeta a pantalla completa con etiquetas superpuestas.
 - Navegación Compose con 4 destinos inferiores y una acción central de
   adopción.
 - Publicación de mascota con foto desde el Photo Picker del sistema.

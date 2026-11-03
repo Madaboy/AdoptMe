@@ -27,7 +27,7 @@ Pendiente de infraestructura: Supabase, Google Maps, Crashlytics y sincronizaci�
 
 | Sección | Estado |
 | :--- | :--- |
-| **Adoptar** | Catálogo real, swipe, ficha de detalle con galería y guardado de intereses |
+| **Adoptar** | Catálogo real, swipe, foto a pantalla completa con etiquetas y ficha con galería |
 | **Reportes** | Crear y listar reportes locales; mapa real pendiente |
 | **Publicar** | Ficha de adopción con foto, especie, edad, salud, convivencia y descripción |
 | **Intereses** | Mascotas guardadas, ficha de detalle, eliminar interés, badge en la barra |
