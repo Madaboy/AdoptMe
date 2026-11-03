@@ -22,11 +22,12 @@ import com.adoptme.viewmodel.ReportsViewModel
 fun AdoptMeNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    startDestination: String = Screen.Adopt.route,
     onShowToast: (String) -> Unit
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Adopt.route,
+        startDestination = startDestination,
         modifier = modifier
     ) {
         composable(Screen.Adopt.route) {

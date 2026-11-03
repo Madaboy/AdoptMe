@@ -10,8 +10,11 @@ import com.adoptme.data.model.Report
 import com.adoptme.data.model.ReportType
 import com.adoptme.data.repository.DogRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -108,7 +111,7 @@ class PublishViewModel(
     private val _toastMessage = MutableStateFlow<String?>(null)
     val toastMessage: StateFlow<String?> = _toastMessage.asStateFlow()
 
-    fun publishDog(
+    suspend fun publishDog(
         name: String,
         species: AnimalSpecies,
         age: String,
@@ -131,6 +134,7 @@ class PublishViewModel(
             return false
         }
 
+        val ownerId = AppContainer.sessionManager.currentUserId()
         val newDog = Dog(
             id = repository.getNextDogId(),
             name = name.trim(),
@@ -152,7 +156,8 @@ class PublishViewModel(
             description = description.trim(),
             emoji = species.emoji,
             imageUrl = imageUrl,
-            isMine = true
+            isMine = true,
+            ownerId = ownerId
         )
 
         repository.addDog(newDog)
@@ -239,5 +244,19 @@ class MyPetViewModel(
     repository: DogRepository = AppContainer.repository
 ) : ViewModel() {
 
-    val myPets: StateFlow<List<Dog>> = repository.myPets
+    val myPets: StateFlow<List<Dog>> = combine(
+        repository.myPets,
+        AppContainer.sessionManager.userSessionFlow
+    ) { pets, session ->
+        val ownerId = session.userId
+        if (ownerId == null) {
+            emptyList()
+        } else {
+            pets.filter { it.ownerId == null || it.ownerId == ownerId }
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = emptyList()
+    )
 }

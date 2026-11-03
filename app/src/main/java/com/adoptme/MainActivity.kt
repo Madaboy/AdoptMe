@@ -4,8 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -13,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +27,8 @@ import com.adoptme.core.navigation.AdoptMeNavHost
 import com.adoptme.core.navigation.Screen
 import com.adoptme.ui.components.AdoptMeBottomBar
 import com.adoptme.ui.components.AdoptMeToast
+import com.adoptme.ui.screens.AddPetOnboardingScreen
+import com.adoptme.ui.screens.AuthScreen
 import com.adoptme.ui.theme.AdoptMeTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,14 +36,46 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AdoptMeTheme {
-                AdoptMeApp()
+                AdoptMeRoot()
             }
         }
     }
 }
 
 @Composable
-fun AdoptMeApp() {
+fun AdoptMeRoot() {
+    val session by AppContainer.sessionManager.userSessionFlow.collectAsState(initial = null)
+    var startRoute by rememberSaveable { mutableStateOf(Screen.Adopt.route) }
+    val currentSession = session
+
+    when {
+        currentSession == null -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            }
+        }
+
+        currentSession.userId == null -> {
+            AuthScreen()
+        }
+
+        !currentSession.onboardingCompleted -> {
+            AddPetOnboardingScreen(onFinished = { route -> startRoute = route })
+        }
+
+        else -> {
+            AdoptMeMain(startRoute = startRoute)
+        }
+    }
+}
+
+@Composable
+fun AdoptMeMain(startRoute: String = Screen.Adopt.route) {
     val navController = rememberNavController()
     var toastMessage by remember { mutableStateOf<String?>(null) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -74,6 +111,7 @@ fun AdoptMeApp() {
         Box(modifier = Modifier.padding(innerPadding)) {
             AdoptMeNavHost(
                 navController = navController,
+                startDestination = startRoute,
                 onShowToast = { message -> toastMessage = message }
             )
 

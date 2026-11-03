@@ -33,7 +33,8 @@ data class Dog(
     val imageUrl: String? = null,
     val sourceUrl: String? = null,
     val backgroundColorHex: String = "#EFEEE4",
-    val isMine: Boolean = false
+    val isMine: Boolean = false,
+    val ownerId: String? = null
 )
 
 enum class AnimalSpecies(val label: String, val emoji: String) {

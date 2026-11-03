@@ -1,6 +1,7 @@
 package com.adoptme.core.di
 
 import android.content.Context
+import com.adoptme.core.session.SessionManager
 import com.adoptme.data.datasource.DataStoreLocalStore
 import com.adoptme.data.datasource.LocalDataSource
 import com.adoptme.data.repository.DogRepository
@@ -26,5 +27,12 @@ object AppContainer {
         DogRepositoryImpl(
             localDataSource = LocalDataSource(DataStoreLocalStore(context))
         )
+    }
+
+    val sessionManager: SessionManager by lazy {
+        val context = requireNotNull(applicationContext) {
+            "AppContainer.init(context) debe llamarse en Application.onCreate()"
+        }
+        SessionManager(context)
     }
 }

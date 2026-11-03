@@ -49,8 +49,9 @@ Principio central: **ningún dato simulado**. Si una fuente no entrega un dato,
 el campo queda en `null` y la UI muestra “No informado” o lo omite. Nunca se
 rellenan valores para “completar” una ficha.
 
-Alcance actual: MVP Android local. No hay backend, autenticación real,
-sincronización entre dispositivos, alertas compartidas ni notificaciones push.
+Alcance actual: MVP Android local. Hay cuenta local con contraseña hasheada y
+onboarding para asociar mascotas al dueño, pero no backend, autenticación
+compartida, sincronización entre dispositivos, alertas compartidas ni push.
 El mapa local de reportes ya usa MapLibre + OpenStreetMap.
 
 ---
@@ -63,6 +64,8 @@ El mapa local de reportes ya usa MapLibre + OpenStreetMap.
   tarjeta a pantalla completa con etiquetas superpuestas.
 - Navegación Compose con 4 destinos inferiores y una acción central de
   adopción.
+- Registro/login local con contraseña PBKDF2, onboarding Paso 2/3 y Paso 3/3,
+  y mascotas asociadas a la cuenta por `ownerId`.
 - Publicación de mascota con foto desde el Photo Picker del sistema.
 - Ficha de detalle completa en `ModalBottomSheet`.
 - Intereses persistentes en DataStore.
@@ -229,7 +232,7 @@ app/src/main/java/com/adoptme/
 │   ├── flags/FeatureFlags.kt      # Funciones futuras deshabilitadas
 │   ├── media/PetImageStore.kt     # Copia de fotos al almacenamiento interno
 │   ├── navigation/                # Destinations + NavHost
-│   └── session/SessionManager.kt  # Sesión local preparada para auth futura
+│   └── session/SessionManager.kt  # Cuenta local, PBKDF2 y sesión persistente
 ├── data/
 │   ├── api/HuachitosApiService.kt
 │   ├── datasource/LocalDataSource.kt
@@ -399,7 +402,8 @@ No subas tokens, contraseñas, keystores ni `local.properties`.
 ## 13. Limitaciones y deuda técnica conocida
 
 - Todo es local: no hay sincronización entre dispositivos.
-- No hay registro/login real; `SessionManager` está preparado pero sin Supabase.
+- El registro/login es local; `SessionManager` guarda la cuenta en DataStore con
+  PBKDF2, pero no hay Supabase Auth ni cuentas compartidas entre dispositivos.
 - Las fotos no se comprimen ni se corrigen según EXIF; se copian tal cual.
 - El formulario de publicación usa `remember`, no `rememberSaveable`: una
   rotación o muerte del proceso puede perder el borrador.
