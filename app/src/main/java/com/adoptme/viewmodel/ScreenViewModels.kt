@@ -26,9 +26,6 @@ class HomeViewModel(
     private val _currentIndex = MutableStateFlow(0)
     val currentIndex: StateFlow<Int> = _currentIndex.asStateFlow()
 
-    private val _speciesFilter = MutableStateFlow<AnimalSpecies?>(null)
-    val speciesFilter: StateFlow<AnimalSpecies?> = _speciesFilter.asStateFlow()
-
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
@@ -37,8 +34,6 @@ class HomeViewModel(
 
     private val _toastMessage = MutableStateFlow<String?>(null)
     val toastMessage: StateFlow<String?> = _toastMessage.asStateFlow()
-
-    private var allDogs: List<Dog> = emptyList()
 
     init {
         loadDogs()
@@ -50,8 +45,8 @@ class HomeViewModel(
             _errorMessage.value = null
             repository.fetchDogsFromApi()
                 .onSuccess { animals ->
-                    allDogs = animals
-                    applyFilter()
+                    _dogs.value = animals
+                    _currentIndex.value = 0
                 }
                 .onFailure {
                     _errorMessage.value =
@@ -59,19 +54,6 @@ class HomeViewModel(
                 }
             _isLoading.value = false
         }
-    }
-
-    fun setSpeciesFilter(species: AnimalSpecies?) {
-        if (_speciesFilter.value == species) return
-        _speciesFilter.value = species
-        applyFilter()
-    }
-
-    private fun applyFilter() {
-        _dogs.value = allDogs.filter { dog ->
-            _speciesFilter.value == null || dog.species == _speciesFilter.value
-        }
-        _currentIndex.value = 0
     }
 
     fun onLike() {
@@ -104,7 +86,7 @@ class HomeViewModel(
         val next = _currentIndex.value + 1
         _currentIndex.value = next
         if (next >= _dogs.value.size) {
-            _toastMessage.value = "No hay más mascotas con este filtro · Prueba otro"
+            _toastMessage.value = "No hay más mascotas por ahora"
         }
     }
 

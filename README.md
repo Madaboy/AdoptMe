@@ -27,14 +27,14 @@ Pendiente de infraestructura: Supabase, Google Maps, Crashlytics y sincronizaci�
 
 | Sección | Estado |
 | :--- | :--- |
-| **Adoptar** | Catálogo real, filtros por especie, swipe, ficha de detalle y guardado de intereses |
+| **Adoptar** | Catálogo real, swipe, ficha de detalle con galería y guardado de intereses |
 | **Reportes** | Crear y listar reportes locales; mapa real pendiente |
 | **Publicar** | Ficha de adopción con foto, especie, edad, salud, convivencia y descripción |
 | **Intereses** | Mascotas guardadas, ficha de detalle, eliminar interés, badge en la barra |
 | **Mi Mascota** | Publicaciones propias con foto y ficha de detalle, acceso a ajustes |
 | **Más** | Funcionalidades futuras con Feature Flags |
 
-El botón central **Adoptar** es un círculo naranja con la huella, sin texto. **Publicar** ocupa la primera posición de la barra y abre el formulario a pantalla completa; no usa “+”: publicar una adopción es un acto de cuidado.
+El botón central **Adoptar** es un círculo coral con la huella, sin texto. **Publicar** ocupa la primera posición de la barra y abre el formulario a pantalla completa; no usa “+”: publicar una adopción es un acto de cuidado.
 
 ## Arquitectura
 
@@ -78,21 +78,21 @@ app/src/main/java/com/adoptme/
 ├── ui/
 │   ├── components/                # Barra, tarjetas, chips, formularios
 │   ├── screens/                   # Una pantalla por destino
-│   └── theme/                     # Paleta Azul & Naranja + Poppins
+│   └── theme/                     # Paleta Coral & Crema + Poppins
 └── viewmodel/ScreenViewModels.kt
 ```
 
 ## Diseño
 
-Paleta **Azul & Naranja** con modo claro/oscuro:
+Paleta **Coral & Crema** con modo claro/oscuro:
 
 | Token | Color |
 | :--- | :--- |
-| Primario (azul) | `#2F80ED` |
-| Secundario (naranja) | `#F47B2A` |
-| Fondo nube | `#F4F6FA` |
-| Tinta | `#111318` |
-| Peligro | `#E5484D` |
+| Primario (coral) | `#D9534F` |
+| Secundario (coral profundo) | `#B23B37` |
+| Fondo crema | `#F7F5F3` |
+| Tinta | `#1E1B1A` |
+| Peligro | `#C0392B` |
 | Advertencia | `#F2A93B` |
 
 Tipografía **Poppins** (SIL OFL 1.1, licencia en `app/src/main/assets/licenses/Poppins-OFL.txt`), cards de 24–32 dp, barra inferior flotante y componentes Material 3.

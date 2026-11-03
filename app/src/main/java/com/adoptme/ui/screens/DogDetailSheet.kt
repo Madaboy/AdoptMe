@@ -48,7 +48,7 @@ import com.adoptme.data.model.Dog
 import com.adoptme.ui.components.InfoChip
 import com.adoptme.ui.components.SourceAttribution
 import com.adoptme.ui.theme.Ink
-import com.adoptme.ui.theme.OrangeAccent
+import com.adoptme.ui.theme.CoralAccent
 
 private val LavenderCard = Color(0xFFE9E3FF)
 private val ButterCard = Color(0xFFFFF1C9)
@@ -388,7 +388,7 @@ private fun DetailPhotoHeader(
                         } else {
                             "Guardar en intereses"
                         },
-                        tint = if (isInterested) OrangeAccent else Ink,
+                        tint = if (isInterested) CoralAccent else Ink,
                         modifier = Modifier.size(21.dp)
                     )
                 }
@@ -574,13 +574,13 @@ private fun DetailActions(
                 Icon(
                     imageVector = Icons.Filled.Favorite,
                     contentDescription = null,
-                    tint = OrangeAccent,
+                    tint = CoralAccent,
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(Modifier.width(7.dp))
                 Text(
                     text = "Quitar interés",
-                    color = OrangeAccent,
+                    color = CoralAccent,
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -590,7 +590,7 @@ private fun DetailActions(
                 shape = RoundedCornerShape(50),
                 modifier = Modifier.height(52.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = OrangeAccent,
+                    containerColor = CoralAccent,
                     contentColor = Color.White
                 )
             ) {

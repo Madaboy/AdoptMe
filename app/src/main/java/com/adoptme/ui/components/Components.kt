@@ -15,14 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.adoptme.ui.theme.OrangeAccent
+import com.adoptme.ui.theme.CoralAccent
 import kotlinx.coroutines.delay
 
 // -------------------------------------------------------------------------
@@ -377,7 +376,7 @@ fun ActionButtons(onPass: () -> Unit, onLike: () -> Unit) {
         Surface(
             onClick = onLike,
             shape = CircleShape,
-            color = OrangeAccent,
+            color = CoralAccent,
             shadowElevation = 10.dp,
             modifier = Modifier.size(76.dp)
         ) {
@@ -394,41 +393,12 @@ fun ActionButtons(onPass: () -> Unit, onLike: () -> Unit) {
 }
 
 // -------------------------------------------------------------------------
-// BOTÓN de icono suave (header)
-// -------------------------------------------------------------------------
-@Composable
-fun SoftIconButton(
-    icon: ImageVector,
-    contentDescription: String,
-    onClick: () -> Unit,
-    containerColor: Color = MaterialTheme.colorScheme.surface,
-    tint: Color = MaterialTheme.colorScheme.onSurface
-) {
-    Surface(
-        onClick = onClick,
-        shape = CircleShape,
-        color = containerColor,
-        shadowElevation = 2.dp,
-        modifier = Modifier.size(48.dp)
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Icon(
-                imageVector = icon,
-                contentDescription = contentDescription,
-                tint = tint,
-                modifier = Modifier.size(21.dp)
-            )
-        }
-    }
-}
-
-// -------------------------------------------------------------------------
 // ESTADO VACÍO
 // -------------------------------------------------------------------------
 @Composable
 fun EmptyState(
     message: String = "No hay más mascotas cercanas",
-    subMessage: String = "Prueba con otro filtro",
+    subMessage: String = "Vuelve más tarde para ver nuevos casos",
     action: (@Composable () -> Unit)? = null
 ) {
     Column(

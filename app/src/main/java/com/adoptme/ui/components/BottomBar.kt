@@ -28,14 +28,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adoptme.R
 import com.adoptme.core.navigation.Screen
-import com.adoptme.ui.theme.OrangeAccent
+import com.adoptme.ui.theme.CoralAccent
 
 /**
  * Barra inferior flotante de 5 posiciones.
  *
  * Publicar · Reportes · [Adoptar] · Intereses · Mi Mascota
  *
- * "Adoptar" es el botón circular naranja con la huella y la acción principal.
+ * "Adoptar" es el botón circular coral con la huella y la acción principal.
  * "Publicar" ocupa la primera posición y abre el formulario a pantalla completa.
  */
 @Composable
@@ -152,7 +152,7 @@ private fun RowScope.DockItem(
             if (badge > 0) {
                 Surface(
                     shape = CircleShape,
-                    color = OrangeAccent,
+                    color = CoralAccent,
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .offset(x = 2.dp, y = (-2).dp)
@@ -197,7 +197,7 @@ private fun RowScope.CenterAdoptItem(onClick: () -> Unit) {
             .padding(horizontal = 7.dp)
             .size(56.dp),
         shape = CircleShape,
-        color = OrangeAccent,
+        color = CoralAccent,
         shadowElevation = 8.dp
     ) {
         Box(contentAlignment = Alignment.Center) {

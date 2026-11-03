@@ -31,7 +31,7 @@ Antes de tocar código:
 Reglas obligatorias:
 - No inventes datos ni agregues mascotas, reportes o intereses de ejemplo.
 - Si la fuente no entrega un dato, usa null y muestra "No informado".
-- Mantén la paleta Azul & Naranja, la tipografía Poppins y la navegación acordada.
+- Mantén la paleta Coral & Crema, la tipografía Poppins y la navegación acordada.
 - "Adoptar" es el botón circular central con la huella, sin texto. "Publicar"
   ocupa la primera posición y usa casa + corazón; nunca uses "+".
 - No agregues Supabase, Google Maps, Firebase ni otras credenciales sin que el

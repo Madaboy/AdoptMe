@@ -58,8 +58,7 @@ sincronización entre dispositivos, mapas reales ni notificaciones push.
 
 ### Funciona
 
-- Catálogo real de Huachitos.cl con paginación, fotos, descripciones y filtro
-  por especie.
+- Catálogo real de Huachitos.cl con paginación, fotos y descripciones.
 - Navegación Compose con 4 destinos inferiores y una acción central de
   adopción.
 - Publicación de mascota con foto desde el Photo Picker del sistema.
@@ -203,7 +202,7 @@ DogRepository (interfaz)
 4. Filtra animales con `estado` vacío o `adopcion`.
 5. Mapea con `HuachitosAnimal.toDog()` y limpia HTML con `HtmlText`.
 6. Deduplica por `source + externalId`.
-7. `HomeViewModel` aplica el filtro de especie y expone la lista.
+7. `HomeViewModel` expone la lista completa sin filtros de especie.
 8. Al abrir una ficha, `DogRepository.fetchGallery()` lee la página pública del
    animal y extrae las fotos adicionales de `/storage/animal-images/`; la API
    solo entrega una portada por mascota.
@@ -238,7 +237,7 @@ app/src/main/java/com/adoptme/
 ├── ui/
 │   ├── components/                # Barra inferior, chips, formularios, toasts
 │   ├── screens/                   # Home, Publish, Reports, Interests, MyPet, More
-│   └── theme/Theme.kt             # Paleta Azul & Naranja + Poppins
+│   └── theme/Theme.kt             # Paleta Coral & Crema + Poppins
 └── viewmodel/ScreenViewModels.kt
 ```
 
@@ -298,15 +297,15 @@ app/src/test/java/com/adoptme/
 
 ## 9. Diseño y estilo
 
-Paleta **Azul & Naranja**:
+Paleta **Coral & Crema**:
 
 | Token | Color |
 |---|---|
-| Primario (azul) | `#2F80ED` |
-| Secundario (naranja) | `#F47B2A` |
-| Fondo nube | `#F4F6FA` |
-| Tinta | `#111318` |
-| Peligro | `#E5484D` |
+| Primario (coral) | `#D9534F` |
+| Secundario (coral profundo) | `#B23B37` |
+| Fondo crema | `#F7F5F3` |
+| Tinta | `#1E1B1A` |
+| Peligro | `#C0392B` |
 | Advertencia | `#F2A93B` |
 
 - Material 3, tipografía **Poppins**, cards de 24–32 dp y barra inferior flotante.

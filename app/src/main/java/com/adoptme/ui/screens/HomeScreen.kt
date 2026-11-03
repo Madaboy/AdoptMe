@@ -5,12 +5,8 @@ package com.adoptme.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,17 +17,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import com.adoptme.R
 import com.adoptme.data.model.AnimalSource
-import com.adoptme.data.model.AnimalSpecies
 import com.adoptme.data.model.Dog
 import com.adoptme.ui.components.*
-import com.adoptme.ui.theme.OrangeAccent
 import com.adoptme.viewmodel.HomeViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -42,7 +38,6 @@ fun HomeScreen(
 ) {
     val dogs by viewModel.dogs.collectAsState()
     val currentIndex by viewModel.currentIndex.collectAsState()
-    val speciesFilter by viewModel.speciesFilter.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val toastMessage by viewModel.toastMessage.collectAsState()
@@ -51,7 +46,6 @@ fun HomeScreen(
     var detailDog by remember { mutableStateOf<Dog?>(null) }
 
     val currentDog = dogs.getOrNull(currentIndex)
-    val remaining = (dogs.size - currentIndex).coerceAtLeast(0)
 
     LaunchedEffect(toastMessage) {
         val message = toastMessage
@@ -66,12 +60,7 @@ fun HomeScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        HomeTopBar(
-            remaining = remaining,
-            selectedSpecies = speciesFilter,
-            onSpeciesSelected = viewModel::setSpeciesFilter,
-            onRefresh = viewModel::loadDogs
-        )
+        HomeTopBar()
 
         when {
             isLoading -> {
@@ -119,29 +108,8 @@ fun HomeScreen(
 
             currentDog == null -> {
                 EmptyState(
-                    message = "No hay más mascotas con este filtro",
-                    subMessage = if (speciesFilter != null) {
-                        "Prueba con otra especie o vuelve a \"Todos\"."
-                    } else {
-                        "Vuelve más tarde: Huachitos.cl publica nuevos casos cada semana."
-                    },
-                    action = {
-                        if (speciesFilter != null) {
-                            OutlinedButton(
-                                onClick = { viewModel.setSpeciesFilter(null) },
-                                shape = RoundedCornerShape(50)
-                            ) {
-                                Text("Ver todos")
-                            }
-                        } else {
-                            OutlinedButton(
-                                onClick = viewModel::loadDogs,
-                                shape = RoundedCornerShape(50)
-                            ) {
-                                Text("Actualizar catálogo")
-                            }
-                        }
-                    }
+                    message = "No hay más mascotas por ahora",
+                    subMessage = "Huachitos.cl publica nuevos casos cada semana."
                 )
             }
 
@@ -212,125 +180,40 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeTopBar(
-    remaining: Int,
-    selectedSpecies: AnimalSpecies?,
-    onSpeciesSelected: (AnimalSpecies?) -> Unit,
-    onRefresh: () -> Unit = {}
-) {
-    Column(
+fun HomeTopBar() {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 14.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+            .padding(horizontal = 20.dp, vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+        Surface(
+            shape = RoundedCornerShape(18.dp),
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(50.dp)
         ) {
-            Surface(
-                shape = RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.primaryContainer,
-                modifier = Modifier.size(46.dp)
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Text("🐾", fontSize = 22.sp)
-                }
-            }
-            Spacer(Modifier.width(11.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "AdoptMe",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Text(
-                    text = "Mascotas reales",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            Box(contentAlignment = Alignment.Center) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_paw),
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(26.dp)
                 )
             }
-            Surface(
-                shape = RoundedCornerShape(50),
-                color = MaterialTheme.colorScheme.primaryContainer
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Text(
-                        text = if (remaining > 0) "$remaining" else "0",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "por descubrir",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                    )
-                }
-            }
-            Spacer(Modifier.width(8.dp))
-            SoftIconButton(
-                icon = Icons.Filled.Refresh,
-                contentDescription = "Actualizar catálogo",
-                onClick = onRefresh
+        }
+        Spacer(Modifier.width(12.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = "AdoptMe",
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = "Adopta, no compres.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            SpeciesChip(
-                label = "Todos",
-                emoji = "🐾",
-                selected = selectedSpecies == null,
-                onClick = { onSpeciesSelected(null) }
-            )
-            AnimalSpecies.entries.forEach { species ->
-                SpeciesChip(
-                    label = species.label + "s",
-                    emoji = species.emoji,
-                    selected = selectedSpecies == species,
-                    onClick = { onSpeciesSelected(species) }
-                )
-            }
-            Spacer(Modifier.width(8.dp))
-        }
-    }
-}
-
-@Composable
-private fun SpeciesChip(
-    label: String,
-    emoji: String,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(50),
-        color = if (selected) {
-            MaterialTheme.colorScheme.primary
-        } else {
-            MaterialTheme.colorScheme.surface
-        },
-        shadowElevation = if (selected) 0.dp else 1.dp
-    ) {
-        Text(
-            text = "$emoji $label",
-            style = MaterialTheme.typography.labelLarge,
-            color = if (selected) {
-                MaterialTheme.colorScheme.onPrimary
-            } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
-            },
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp)
-        )
     }
 }
 

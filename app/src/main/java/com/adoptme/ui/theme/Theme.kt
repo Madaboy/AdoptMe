@@ -23,46 +23,46 @@ import androidx.core.view.WindowCompat
 import com.adoptme.R
 
 // -------------------------------------------------------------------------
-// PALETA "AZUL & NARANJA" — extraída de las referencias visuales
-// Azul eléctrico, naranja cálido, tinta profunda y superficies limpias.
+// PALETA "CORAL & CREMA" — tomada de la referencia PetCare
 // -------------------------------------------------------------------------
 
-val BluePrimary = Color(0xFF2F80ED)
-val BlueDeep = Color(0xFF1357B8)
-val BlueSoft = Color(0xFFE3EEFF)
-val OrangeAccent = Color(0xFFF47B2A)
-val OrangeSoft = Color(0xFFFFE8D8)
+val CoralPrimary = Color(0xFFD9534F)
+val CoralDeep = Color(0xFFB23B37)
+val CoralSoft = Color(0xFFF7E1DF)
+val CoralAccent = CoralPrimary
+val Honey = Color(0xFFE0A03A)
+val HoneySoft = Color(0xFFFCEFD8)
 val Mint = Color(0xFF2F9E6B)
 val MintSoft = Color(0xFFDDF5EA)
-val Ink = Color(0xFF111318)
-val InkSoft = Color(0xFF667085)
-val Cloud = Color(0xFFF4F6FA)
+val Ink = Color(0xFF1E1B1A)
+val InkSoft = Color(0xFF6F6864)
+val WarmCloud = Color(0xFFF7F5F3)
 val SurfaceWhite = Color(0xFFFFFFFF)
-val SurfaceMuted = Color(0xFFE9EDF4)
-val OutlineSoft = Color(0xFFE1E6EF)
-val OutlineFaint = Color(0xFFEEF1F6)
-val DangerRed = Color(0xFFE5484D)
+val SurfaceMuted = Color(0xFFF1EDEA)
+val OutlineSoft = Color(0xFFE5DFDB)
+val OutlineFaint = Color(0xFFF0EBE8)
+val DangerRed = Color(0xFFC0392B)
 val WarningAmber = Color(0xFFF2A93B)
 
 // Semántica del mapa de reportes
 val ReportAbandonment = WarningAmber
 val ReportDanger = DangerRed
-val ReportAdoption = BluePrimary
+val ReportAdoption = CoralPrimary
 
 private val LightColors = lightColorScheme(
-    primary = BluePrimary,
+    primary = CoralPrimary,
     onPrimary = Color.White,
-    primaryContainer = BlueSoft,
-    onPrimaryContainer = Color(0xFF123B73),
-    secondary = OrangeAccent,
+    primaryContainer = CoralSoft,
+    onPrimaryContainer = Color(0xFF5A1F1C),
+    secondary = CoralDeep,
     onSecondary = Color.White,
-    secondaryContainer = OrangeSoft,
-    onSecondaryContainer = Color(0xFF5A2A0C),
-    tertiary = Mint,
+    secondaryContainer = Color(0xFFF4D6D4),
+    onSecondaryContainer = Color(0xFF5A1F1C),
+    tertiary = Honey,
     onTertiary = Color.White,
-    tertiaryContainer = MintSoft,
-    onTertiaryContainer = Color(0xFF0C3B29),
-    background = Cloud,
+    tertiaryContainer = HoneySoft,
+    onTertiaryContainer = Color(0xFF5A3A0A),
+    background = WarmCloud,
     onBackground = Ink,
     surface = SurfaceWhite,
     onSurface = Ink,
@@ -72,43 +72,43 @@ private val LightColors = lightColorScheme(
     outlineVariant = OutlineFaint,
     error = DangerRed,
     onError = Color.White,
-    errorContainer = Color(0xFFFDE4E5),
-    onErrorContainer = Color(0xFF6E1D1F),
+    errorContainer = Color(0xFFF9DEDC),
+    onErrorContainer = Color(0xFF410E0B),
     inverseSurface = Ink,
     inverseOnSurface = Color.White
 )
 
 private val DarkColors = darkColorScheme(
-    primary = Color(0xFF8AB4FF),
-    onPrimary = Color(0xFF0A2A55),
-    primaryContainer = Color(0xFF1D3E6B),
-    onPrimaryContainer = Color(0xFFD9E6FF),
-    secondary = Color(0xFFFFB184),
-    onSecondary = Color(0xFF4A1F08),
-    secondaryContainer = Color(0xFF5A2A12),
-    onSecondaryContainer = Color(0xFFFFE0CC),
-    tertiary = Color(0xFF7ED9B0),
-    onTertiary = Color(0xFF063A28),
-    tertiaryContainer = Color(0xFF0F4A35),
-    onTertiaryContainer = Color(0xFFD7F7E8),
-    background = Color(0xFF0B0E13),
-    onBackground = Color(0xFFF1F4F8),
-    surface = Color(0xFF151A22),
-    onSurface = Color(0xFFF1F4F8),
-    surfaceVariant = Color(0xFF1E2530),
-    onSurfaceVariant = Color(0xFFA7B0C0),
-    outline = Color(0xFF303846),
-    outlineVariant = Color(0xFF232A35),
-    error = Color(0xFFFF8A8A),
-    onError = Color(0xFF4A0C0E),
-    errorContainer = Color(0xFF5C1A1D),
-    onErrorContainer = Color(0xFFFFDAD9),
-    inverseSurface = Color(0xFFF1F4F8),
-    inverseOnSurface = Color(0xFF111318)
+    primary = Color(0xFFF08A84),
+    onPrimary = Color(0xFF4A0F0D),
+    primaryContainer = Color(0xFF6B2420),
+    onPrimaryContainer = Color(0xFFFFDAD6),
+    secondary = Color(0xFFFFB4AB),
+    onSecondary = Color(0xFF561E1A),
+    secondaryContainer = Color(0xFF73332F),
+    onSecondaryContainer = Color(0xFFFFDAD6),
+    tertiary = Color(0xFFF2C078),
+    onTertiary = Color(0xFF442B00),
+    tertiaryContainer = Color(0xFF624000),
+    onTertiaryContainer = Color(0xFFFFDFA0),
+    background = Color(0xFF121010),
+    onBackground = Color(0xFFF5F0EE),
+    surface = Color(0xFF1C1918),
+    onSurface = Color(0xFFF5F0EE),
+    surfaceVariant = Color(0xFF2A2624),
+    onSurfaceVariant = Color(0xFFB8AFA9),
+    outline = Color(0xFF4A4441),
+    outlineVariant = Color(0xFF332E2C),
+    error = Color(0xFFFFB4AB),
+    onError = Color(0xFF690005),
+    errorContainer = Color(0xFF93000A),
+    onErrorContainer = Color(0xFFFFDAD6),
+    inverseSurface = Color(0xFFF5F0EE),
+    inverseOnSurface = Ink
 )
 
 // -------------------------------------------------------------------------
-// TIPOGRAFÍA — Poppins, geométrica y redondeada como las referencias
+// TIPOGRAFÍA — Poppins
 // -------------------------------------------------------------------------
 
 val Poppins = FontFamily(
