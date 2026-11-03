@@ -65,7 +65,8 @@ El mapa local de reportes ya usa MapLibre + OpenStreetMap.
 - Navegación Compose con 4 destinos inferiores y una acción central de
   adopción.
 - Pantalla de creación de cuenta en **Mi Cuenta**, solo front-end: campos,
-  validaciones visuales y enlace de login sin persistencia ni autenticación.
+  Google demo, casillas de términos/privacidad/mayoría de edad y enlace de login,
+  sin persistencia ni autenticación. Textos base alineados a Ley 21.719 y 21.020.
 - Publicación de mascota con foto desde el Photo Picker del sistema.
 - Ficha de detalle completa en `ModalBottomSheet`.
 - Intereses persistentes en DataStore.

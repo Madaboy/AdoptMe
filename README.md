@@ -32,7 +32,7 @@ Pendiente de infraestructura: Supabase/backend para alertas compartidas, Crashly
 | **Reportes** | Crear y listar reportes locales; mapa MapLibre/OSM con ubicación y radio de alertas |
 | **Publicar** | Ficha de adopción con foto, especie, edad, salud, convivencia y descripción |
 | **Intereses** | Mascotas guardadas, ficha de detalle, eliminar interés, badge en la barra |
-| **Mi Cuenta** | Pantalla de creación de cuenta (solo front-end); área logeada pendiente |
+| **Mi Cuenta** | Creación de cuenta front-end: Google demo, casillas Ley 21.719/21.020; área logeada pendiente |
 | **Más** | Pendiente de la cuenta logeada; funcionalidades futuras con Feature Flags |
 
 El botón central **Adoptar** es un círculo coral con la huella, sin texto. **Publicar** ocupa la primera posición de la barra y abre el formulario a pantalla completa; no usa “+”: publicar una adopción es un acto de cuidado.
@@ -140,6 +140,7 @@ Salida:
 - Las publicaciones, intereses y reportes son locales: no se sincronizan entre dispositivos. El mapa muestra únicamente los reportes de este teléfono.
 - Las fotos se copian al almacenamiento privado del dispositivo y no se suben a la nube.
 - La creación de cuenta es solo front-end: no persiste cuentas, no autentica y aún no existe la pantalla logeada.
+- Los textos de términos y privacidad son una base de prototipo alineada a las leyes 21.719 y 21.020; requieren revisión legal antes de producción.
 - Las alertas compartidas entre usuarios requieren backend; el mapa local ya funciona con MapLibre/OSM.
 - Las secciones de chat, comunidad, tienda y gamificación están deshabilitadas por Feature Flags.
 
