@@ -64,14 +64,16 @@ El mapa local de reportes ya usa MapLibre + OpenStreetMap.
   tarjeta a pantalla completa con etiquetas superpuestas.
 - Navegación Compose con 4 destinos inferiores y una acción central de
   adopción.
-- Pantalla de creación de cuenta en **Mi Cuenta**, solo front-end: campos,
-  Google demo, casillas de términos/privacidad/mayoría de edad y enlace de login,
-  sin persistencia ni autenticación. Textos base alineados a Ley 21.719 y 21.020.
+- Pantalla de creación de cuenta en **Mi Cuenta**, solo front-end: iconos y
+  logotipo SVG, Google demo, casillas de términos/privacidad/mayoría de edad y
+  enlace de login, sin persistencia ni autenticación. Textos base alineados a
+  Ley 21.719 y 21.020.
 - Publicación de mascota con foto desde el Photo Picker del sistema.
 - Ficha de detalle completa en `ModalBottomSheet`.
 - Intereses persistentes en DataStore.
 - Publicaciones propias persistentes.
-- Reportes locales persistentes.
+- Reportes locales persistentes, con mapa a pantalla completa, alertas cercanas
+  y ficha de alerta al tocar un marcador o una tarjeta.
 - Recuperación ante estado local corrupto.
 - Tests unitarios y lint sin errores.
 - Workflow de GitHub Actions para compilar, testear y ejecutar lint.

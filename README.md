@@ -29,10 +29,10 @@ Pendiente de infraestructura: Supabase/backend para alertas compartidas, Crashly
 | Sección | Estado |
 | :--- | :--- |
 | **Adoptar** | Catálogo real, swipe, foto a pantalla completa con etiquetas y ficha con galería |
-| **Reportes** | Crear y listar reportes locales; mapa MapLibre/OSM con ubicación y radio de alertas |
+| **Reportes** | Mapa MapLibre/OSM a pantalla completa, alertas con ficha al tocarlas y reporte desde la app |
 | **Publicar** | Ficha de adopción con foto, especie, edad, salud, convivencia y descripción |
 | **Intereses** | Mascotas guardadas, ficha de detalle, eliminar interés, badge en la barra |
-| **Mi Cuenta** | Creación de cuenta front-end: Google demo, casillas Ley 21.719/21.020; área logeada pendiente |
+| **Mi Cuenta** | Creación de cuenta front-end con iconos SVG, Google demo y casillas Ley 21.719/21.020 |
 | **Más** | Pendiente de la cuenta logeada; funcionalidades futuras con Feature Flags |
 
 El botón central **Adoptar** es un círculo coral con la huella, sin texto. **Publicar** ocupa la primera posición de la barra y abre el formulario a pantalla completa; no usa “+”: publicar una adopción es un acto de cuidado.

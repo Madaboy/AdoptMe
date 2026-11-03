@@ -23,7 +23,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.adoptme.R
 
 /**
@@ -60,6 +59,22 @@ fun AuthScreen(onShowToast: (String) -> Unit = {}) {
                 .padding(horizontal = 24.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Surface(
+                shape = RoundedCornerShape(24.dp),
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(72.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_paw),
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
+            }
+            Spacer(Modifier.height(18.dp))
+
             Text(
                 text = "Crea tu cuenta",
                 style = MaterialTheme.typography.displaySmall,
@@ -84,11 +99,10 @@ fun AuthScreen(onShowToast: (String) -> Unit = {}) {
                     .height(56.dp),
                 shape = RoundedCornerShape(50)
             ) {
-                Text(
-                    text = "G",
-                    color = Color(0xFF4285F4),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 19.sp
+                Icon(
+                    painter = painterResource(R.drawable.ic_google),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
                 )
                 Spacer(Modifier.width(10.dp))
                 Text(

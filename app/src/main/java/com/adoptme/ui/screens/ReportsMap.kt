@@ -7,6 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,12 +39,15 @@ fun ReportsMap(
     reports: List<Report>,
     userLocation: LatLng?,
     modifier: Modifier = Modifier,
-    onMapReady: (MapLibreMap) -> Unit = {}
+    onMapReady: (MapLibreMap) -> Unit = {},
+    onReportClick: (Report) -> Unit = {}
 ) {
     val context = LocalContext.current
     val lifecycleOwner = context as? LifecycleOwner
     var map by remember { mutableStateOf<MapLibreMap?>(null) }
     var loadedStyle by remember { mutableStateOf<Style?>(null) }
+    val currentReports by rememberUpdatedState(reports)
+    val currentOnReportClick by rememberUpdatedState(onReportClick)
 
     val mapView = remember {
         MapView(context).apply {
@@ -56,6 +60,17 @@ fun ReportsMap(
                     updateMapSources(style, reports, userLocation)
                 }
                 onMapReady(mapInstance)
+
+                mapInstance.addOnMapClickListener { latLng ->
+                    val point = mapInstance.projection.toScreenLocation(latLng)
+                    val features = mapInstance.queryRenderedFeatures(point, REPORTS_LAYER)
+                    val reportId = features.firstOrNull()?.getStringProperty("reportId")
+                    val report = currentReports.find { it.id.toString() == reportId }
+                    if (report != null) {
+                        currentOnReportClick(report)
+                    }
+                    false
+                }
             }
         }
     }
@@ -130,6 +145,7 @@ private fun updateMapSources(style: Style, reports: List<Report>, userLocation: 
         val longitude = report.longitude ?: return@mapNotNull null
         Feature.fromGeometry(Point.fromLngLat(longitude, latitude)).apply {
             addStringProperty("type", report.type.name)
+            addStringProperty("reportId", report.id.toString())
         }
     }
     style.getSourceAs<GeoJsonSource>(REPORTS_SOURCE)
