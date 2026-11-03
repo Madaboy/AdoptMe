@@ -43,7 +43,7 @@ Reglas obligatorias:
 
 TAREA ACTUAL:
 [Describe aquí la tarea concreta. Ejemplo: "Implementa el share sheet para
-compartir una ficha desde Mi Mascota, con tests y README actualizado."]
+compartir una ficha desde la ficha de detalle, con tests y README actualizado."]
 
 Al terminar:
 1. Ejecuta ./gradlew assembleDebug testDebugUnitTest lintDebug.

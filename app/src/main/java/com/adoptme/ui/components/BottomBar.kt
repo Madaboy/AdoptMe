@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +33,7 @@ import com.adoptme.ui.theme.CoralAccent
 /**
  * Barra inferior flotante de 5 posiciones.
  *
- * Publicar · Reportes · [Adoptar] · Intereses · Mi Mascota
+ * Publicar · Reportes · [Adoptar] · Intereses · Mi Cuenta
  *
  * "Adoptar" es el botón circular coral con la huella y la acción principal.
  * "Publicar" ocupa la primera posición y abre el formulario a pantalla completa.
@@ -86,10 +87,10 @@ fun AdoptMeBottomBar(
                     onClick = { onNavigate(Screen.Interests) }
                 )
                 DockItem(
-                    screen = Screen.MyPet,
+                    screen = Screen.Account,
                     currentRoute = currentRoute,
-                    icon = painterResource(R.drawable.ic_dog),
-                    onClick = { onNavigate(Screen.MyPet) }
+                    imageVector = Icons.Filled.Person,
+                    onClick = { onNavigate(Screen.Account) }
                 )
             }
         }

@@ -6,15 +6,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.adoptme.ui.screens.AuthScreen
 import com.adoptme.ui.screens.HomeScreen
 import com.adoptme.ui.screens.MoreHubScreen
 import com.adoptme.ui.screens.MyAdoptionsScreen
-import com.adoptme.ui.screens.MyPetScreen
 import com.adoptme.ui.screens.PublishScreen
 import com.adoptme.ui.screens.ReportsScreen
 import com.adoptme.viewmodel.HomeViewModel
 import com.adoptme.viewmodel.MyAdoptionsViewModel
-import com.adoptme.viewmodel.MyPetViewModel
 import com.adoptme.viewmodel.PublishViewModel
 import com.adoptme.viewmodel.ReportsViewModel
 
@@ -57,14 +56,8 @@ fun AdoptMeNavHost(
                 onShowToast = onShowToast
             )
         }
-        composable(Screen.MyPet.route) {
-            val myPetViewModel: MyPetViewModel = viewModel()
-            MyPetScreen(
-                viewModel = myPetViewModel,
-                onPublish = { navController.navigate(Screen.Publish.route) },
-                onOpenMore = { navController.navigate(Screen.More.route) },
-                onShowToast = onShowToast
-            )
+        composable(Screen.Account.route) {
+            AuthScreen(onShowToast = onShowToast)
         }
         composable(Screen.Publish.route) {
             val publishViewModel: PublishViewModel = viewModel()
@@ -73,7 +66,7 @@ fun AdoptMeNavHost(
                 onClose = { navController.popBackStack() },
                 onPublished = {
                     navController.popBackStack()
-                    navController.navigate(Screen.MyPet.route) {
+                    navController.navigate(Screen.Adopt.route) {
                         launchSingleTop = true
                     }
                 },

@@ -49,9 +49,9 @@ Principio central: **ningún dato simulado**. Si una fuente no entrega un dato,
 el campo queda en `null` y la UI muestra “No informado” o lo omite. Nunca se
 rellenan valores para “completar” una ficha.
 
-Alcance actual: MVP Android local. Hay cuenta local con contraseña hasheada y
-onboarding para asociar mascotas al dueño, pero no backend, autenticación
-compartida, sincronización entre dispositivos, alertas compartidas ni push.
+Alcance actual: MVP Android local. La pestaña **Mi Cuenta** muestra solo el
+front-end de creación de cuenta; no hay registro/logeo real, backend,
+sincronización entre dispositivos, alertas compartidas ni push.
 El mapa local de reportes ya usa MapLibre + OpenStreetMap.
 
 ---
@@ -64,8 +64,8 @@ El mapa local de reportes ya usa MapLibre + OpenStreetMap.
   tarjeta a pantalla completa con etiquetas superpuestas.
 - Navegación Compose con 4 destinos inferiores y una acción central de
   adopción.
-- Registro/login local con contraseña PBKDF2, onboarding Paso 2/3 y Paso 3/3,
-  y mascotas asociadas a la cuenta por `ownerId`.
+- Pantalla de creación de cuenta en **Mi Cuenta**, solo front-end: campos,
+  validaciones visuales y enlace de login sin persistencia ni autenticación.
 - Publicación de mascota con foto desde el Photo Picker del sistema.
 - Ficha de detalle completa en `ModalBottomSheet`.
 - Intereses persistentes en DataStore.
@@ -232,7 +232,7 @@ app/src/main/java/com/adoptme/
 │   ├── flags/FeatureFlags.kt      # Funciones futuras deshabilitadas
 │   ├── media/PetImageStore.kt     # Copia de fotos al almacenamiento interno
 │   ├── navigation/                # Destinations + NavHost
-│   └── session/SessionManager.kt  # Cuenta local, PBKDF2 y sesión persistente
+│   └── session/SessionManager.kt  # Sesión local preparada; aún no usada por la UI
 ├── data/
 │   ├── api/HuachitosApiService.kt
 │   ├── datasource/LocalDataSource.kt
@@ -276,17 +276,17 @@ app/src/test/java/com/adoptme/
 
 ### Navegación
 
-- Barra inferior: **Publicar · Reportes · [Adoptar] · Intereses · Mi Mascota**.
+- Barra inferior: **Publicar · Reportes · [Adoptar] · Intereses · Mi Cuenta**.
 - “Adoptar” es el **botón circular central** con la huella y la acción
   principal: abre el catálogo de mascotas.
 - “Publicar” ocupa la primera posición y abre el formulario a pantalla completa.
-- “Más” se abre desde Mi Mascota; no ocupa una posición en la barra.
+- “Más” queda pendiente de la cuenta logeada; no ocupa una posición en la barra.
 - No cambies la navegación a una barra de 5 pestañas.
 - No uses “+” para publicar: el icono es casa + corazón.
 
 ### Ficha de detalle
 
-- Se abre desde Adoptar, Intereses y Mi Mascota.
+- Se abre desde Adoptar e Intereses.
 - Debe mostrar galería de fotos con visor a pantalla completa, nombre, ubicación,
   tarjetas pastel de sexo/edad/raza, descripción completa, ficha,
   salud/convivencia, necesidades especiales y fuente.
@@ -402,13 +402,14 @@ No subas tokens, contraseñas, keystores ni `local.properties`.
 ## 13. Limitaciones y deuda técnica conocida
 
 - Todo es local: no hay sincronización entre dispositivos.
-- El registro/login es local; `SessionManager` guarda la cuenta en DataStore con
-  PBKDF2, pero no hay Supabase Auth ni cuentas compartidas entre dispositivos.
+- La pantalla de cuenta es solo front-end: no guarda cuentas, no autentica y la
+  pantalla logeada todavía no existe. `SessionManager` queda preparado para el
+  futuro, pero la UI actual no lo usa.
 - Las fotos no se comprimen ni se corrigen según EXIF; se copian tal cual.
 - El formulario de publicación usa `remember`, no `rememberSaveable`: una
   rotación o muerte del proceso puede perder el borrador.
 - No hay indicador de carga mientras DataStore restaura el estado local.
-- “Compartir ficha” en Mi Mascota todavía muestra un toast de “próximamente”.
+- La sección Mi Mascota y “Más” quedan ocultas hasta implementar la cuenta logeada.
 - No se pueden editar ni cerrar publicaciones propias.
 - Los reportes son locales: el mapa solo muestra los de este dispositivo y no
   tienen foto ni sincronización.

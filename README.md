@@ -10,9 +10,9 @@ Fase 0 completada en lo funcional:
 - Navegación Compose con 5 posiciones y acción central de adopción.
 - ViewModel por pantalla y repositorio como interfaz.
 - Persistencia local de intereses, publicaciones propias y reportes.
-- Cuenta local con registro/login, contraseña hasheada y onboarding para asociar la primera mascota al dueño.
+- Pantalla de creación de cuenta en la pestaña **Mi Cuenta** (solo front-end; sin persistencia ni login real todavía).
 - Publicación con foto desde el selector del sistema, sin permisos de almacenamiento.
-- Ficha de detalle en formato carta con galería de todas las fotos de Huachitos y visor a pantalla completa, accesible desde Adoptar, Intereses y Mi Mascota.
+- Ficha de detalle en formato carta con galería de todas las fotos de Huachitos y visor a pantalla completa, accesible desde Adoptar e Intereses.
 - Sin datos de ejemplo visibles en producción.
 - Tests unitarios, lint sin errores y CI de GitHub Actions.
 
@@ -32,9 +32,8 @@ Pendiente de infraestructura: Supabase/backend para alertas compartidas, Crashly
 | **Reportes** | Crear y listar reportes locales; mapa MapLibre/OSM con ubicación y radio de alertas |
 | **Publicar** | Ficha de adopción con foto, especie, edad, salud, convivencia y descripción |
 | **Intereses** | Mascotas guardadas, ficha de detalle, eliminar interés, badge en la barra |
-| **Mi Mascota** | Publicaciones propias con foto y ficha de detalle, acceso a ajustes |
-| **Cuenta** | Registro e inicio de sesión local; onboarding para agregar la primera mascota |
-| **Más** | Funcionalidades futuras con Feature Flags |
+| **Mi Cuenta** | Pantalla de creación de cuenta (solo front-end); área logeada pendiente |
+| **Más** | Pendiente de la cuenta logeada; funcionalidades futuras con Feature Flags |
 
 El botón central **Adoptar** es un círculo coral con la huella, sin texto. **Publicar** ocupa la primera posición de la barra y abre el formulario a pantalla completa; no usa “+”: publicar una adopción es un acto de cuidado.
 
@@ -140,7 +139,7 @@ Salida:
 
 - Las publicaciones, intereses y reportes son locales: no se sincronizan entre dispositivos. El mapa muestra únicamente los reportes de este teléfono.
 - Las fotos se copian al almacenamiento privado del dispositivo y no se suben a la nube.
-- El registro/login es local (contraseña PBKDF2); para cuentas compartidas y sincronización real se requiere Supabase Auth.
+- La creación de cuenta es solo front-end: no persiste cuentas, no autentica y aún no existe la pantalla logeada.
 - Las alertas compartidas entre usuarios requieren backend; el mapa local ya funciona con MapLibre/OSM.
 - Las secciones de chat, comunidad, tienda y gamificación están deshabilitadas por Feature Flags.
 

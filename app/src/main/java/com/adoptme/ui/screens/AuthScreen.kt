@@ -1,10 +1,10 @@
 package com.adoptme.ui.screens
 
+import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -23,22 +23,14 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adoptme.R
-import com.adoptme.core.di.AppContainer
-import com.adoptme.core.navigation.Screen
-import com.adoptme.ui.components.AdoptMeToast
-import com.adoptme.viewmodel.PublishViewModel
-import kotlinx.coroutines.launch
 
 /**
- * Onboarding local: paso 2 (crear cuenta) y paso 3 (agregar mascota).
- * La cuenta se guarda en el dispositivo y la mascota queda ligada a su id.
+ * Pantalla de creación de cuenta: solo front-end por ahora.
+ * No guarda cuentas ni inicia sesión; el flujo logeado se implementará después.
  */
 @Composable
-fun AuthScreen() {
-    var isLogin by rememberSaveable { mutableStateOf(false) }
+fun AuthScreen(onShowToast: (String) -> Unit = {}) {
     var firstName by rememberSaveable { mutableStateOf("") }
     var lastName by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
@@ -46,9 +38,7 @@ fun AuthScreen() {
     var confirmPassword by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var confirmVisible by rememberSaveable { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    val scope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
@@ -63,49 +53,40 @@ fun AuthScreen() {
                 .padding(horizontal = 24.dp, vertical = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (!isLogin) {
-                StepIndicator(step = 2, total = 3)
-                Spacer(Modifier.height(18.dp))
-            }
+            StepIndicator(step = 2, total = 3)
+            Spacer(Modifier.height(18.dp))
 
             Text(
-                text = if (isLogin) "Inicia sesión" else "Crea tu cuenta",
+                text = "Crea tu cuenta",
                 style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = if (isLogin) {
-                    "Entra para gestionar tus mascotas y adopciones."
-                } else {
-                    "Crea tu cuenta para asociar tus mascotas y gestionar sus fichas."
-                },
+                text = "Crea tu cuenta para asociar tus mascotas y gestionar sus fichas.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(28.dp))
 
-            if (!isLogin) {
-                AuthTextField(
-                    value = firstName,
-                    onValueChange = { firstName = it },
-                    placeholder = "Nombre",
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                )
-                Spacer(Modifier.height(10.dp))
-                AuthTextField(
-                    value = lastName,
-                    onValueChange = { lastName = it },
-                    placeholder = "Apellido",
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                )
-                Spacer(Modifier.height(10.dp))
-            }
-
+            AuthTextField(
+                value = firstName,
+                onValueChange = { firstName = it },
+                placeholder = "Nombre",
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            )
+            Spacer(Modifier.height(10.dp))
+            AuthTextField(
+                value = lastName,
+                onValueChange = { lastName = it },
+                placeholder = "Apellido",
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            )
+            Spacer(Modifier.height(10.dp))
             AuthTextField(
                 value = email,
                 onValueChange = { email = it },
@@ -114,13 +95,12 @@ fun AuthScreen() {
                 imeAction = ImeAction.Next
             )
             Spacer(Modifier.height(10.dp))
-
             AuthTextField(
                 value = password,
                 onValueChange = { password = it },
                 placeholder = "Contraseña",
                 keyboardType = KeyboardType.Password,
-                imeAction = if (isLogin) ImeAction.Done else ImeAction.Next,
+                imeAction = ImeAction.Next,
                 visualTransformation = if (passwordVisible) {
                     VisualTransformation.None
                 } else {
@@ -133,28 +113,25 @@ fun AuthScreen() {
                     )
                 }
             )
-
-            if (!isLogin) {
-                Spacer(Modifier.height(10.dp))
-                AuthTextField(
-                    value = confirmPassword,
-                    onValueChange = { confirmPassword = it },
-                    placeholder = "Confirmar contraseña",
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done,
-                    visualTransformation = if (confirmVisible) {
-                        VisualTransformation.None
-                    } else {
-                        PasswordVisualTransformation()
-                    },
-                    trailingIcon = {
-                        PasswordVisibilityButton(
-                            visible = confirmVisible,
-                            onToggle = { confirmVisible = !confirmVisible }
-                        )
-                    }
-                )
-            }
+            Spacer(Modifier.height(10.dp))
+            AuthTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                placeholder = "Confirmar contraseña",
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+                visualTransformation = if (confirmVisible) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
+                trailingIcon = {
+                    PasswordVisibilityButton(
+                        visible = confirmVisible,
+                        onToggle = { confirmVisible = !confirmVisible }
+                    )
+                }
+            )
 
             errorMessage?.let { error ->
                 Spacer(Modifier.height(12.dp))
@@ -170,31 +147,21 @@ fun AuthScreen() {
 
             Button(
                 onClick = {
-                    if (isLoading) return@Button
-                    errorMessage = null
-                    if (!isLogin && password != confirmPassword) {
-                        errorMessage = "Las contraseñas no coinciden."
-                        return@Button
+                    errorMessage = when {
+                        firstName.isBlank() || lastName.isBlank() ->
+                            "Completa tu nombre y apellido."
+                        !Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches() ->
+                            "Ingresa un correo electrónico válido."
+                        password.length < 6 ->
+                            "La contraseña debe tener al menos 6 caracteres."
+                        password != confirmPassword ->
+                            "Las contraseñas no coinciden."
+                        else -> null
                     }
-                    isLoading = true
-                    scope.launch {
-                        val result = if (isLogin) {
-                            AppContainer.sessionManager.login(email, password)
-                        } else {
-                            AppContainer.sessionManager.register(
-                                firstName = firstName,
-                                lastName = lastName,
-                                email = email,
-                                password = password
-                            )
-                        }
-                        isLoading = false
-                        if (!result.success) {
-                            errorMessage = result.message ?: "No pudimos completar la operación."
-                        }
+                    if (errorMessage == null) {
+                        onShowToast("Cuenta creada en modo demo. El inicio de sesión estará disponible próximamente.")
                     }
                 },
-                enabled = !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -204,18 +171,10 @@ fun AuthScreen() {
                     contentColor = MaterialTheme.colorScheme.inverseOnSurface
                 )
             ) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(20.dp),
-                        strokeWidth = 2.dp,
-                        color = MaterialTheme.colorScheme.inverseOnSurface
-                    )
-                } else {
-                    Text(
-                        text = if (isLogin) "Entrar" else "Crear cuenta",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
+                Text(
+                    text = "Crear cuenta",
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
 
             Spacer(Modifier.height(22.dp))
@@ -225,124 +184,19 @@ fun AuthScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = if (isLogin) "¿No tienes cuenta? " else "¿Ya tienes cuenta? ",
+                    text = "¿Ya tienes cuenta? ",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = if (isLogin) "Crea una" else "Inicia sesión",
+                    text = "Inicia sesión",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.clickable {
-                        isLogin = !isLogin
-                        errorMessage = null
-                        password = ""
-                        confirmPassword = ""
+                        onShowToast("Inicio de sesión estará disponible próximamente.")
                     }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun AddPetOnboardingScreen(onFinished: (String) -> Unit) {
-    val scope = rememberCoroutineScope()
-    var showPublish by remember { mutableStateOf(false) }
-    var toastMessage by remember { mutableStateOf<String?>(null) }
-
-    if (showPublish) {
-        val publishViewModel: PublishViewModel = viewModel()
-        Box(modifier = Modifier.fillMaxSize()) {
-            PublishScreen(
-                viewModel = publishViewModel,
-                onClose = { showPublish = false },
-                onPublished = {
-                    scope.launch {
-                        AppContainer.sessionManager.markOnboardingCompleted()
-                        onFinished(Screen.MyPet.route)
-                    }
-                },
-                onShowToast = { toastMessage = it }
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                contentAlignment = Alignment.TopCenter
-            ) {
-                AdoptMeToast(toastMessage) { toastMessage = null }
-            }
-        }
-        return
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 28.dp, vertical = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            StepIndicator(step = 3, total = 3)
-            Spacer(Modifier.height(20.dp))
-            Text(
-                text = "Agrega tu primera mascota",
-                style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.onBackground,
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = "Quedará asociada a tu cuenta para que puedas gestionar su ficha de adopción.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.height(28.dp))
-            Surface(
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primaryContainer,
-                modifier = Modifier.size(190.dp)
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Text("🐶", fontSize = 82.sp)
-                }
-            }
-            Spacer(Modifier.height(30.dp))
-            Button(
-                onClick = { showPublish = true },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(50),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.inverseSurface,
-                    contentColor = MaterialTheme.colorScheme.inverseOnSurface
-                )
-            ) {
-                Text("Agregar mascota", style = MaterialTheme.typography.titleMedium)
-            }
-            Spacer(Modifier.height(10.dp))
-            TextButton(
-                onClick = {
-                    scope.launch {
-                        AppContainer.sessionManager.markOnboardingCompleted()
-                        onFinished(Screen.Adopt.route)
-                    }
-                }
-            ) {
-                Text(
-                    text = "Explorar adopciones",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontWeight = FontWeight.Medium
                 )
             }
         }

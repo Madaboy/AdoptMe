@@ -9,6 +9,7 @@ sealed class Screen(val route: String, val label: String) {
     object Reports : Screen("reports", "Reportes")
     object Publish : Screen("publish", "Publicar")
     object Interests : Screen("interests", "Intereses")
+    object Account : Screen("account", "Mi Cuenta")
     object MyPet : Screen("myPet", "Mi Mascota")
     object More : Screen("more", "Más")
 }
@@ -17,5 +18,5 @@ val bottomNavItems = listOf(
     Screen.Publish,
     Screen.Reports,
     Screen.Interests,
-    Screen.MyPet
+    Screen.Account
 )
