@@ -3,10 +3,15 @@ package com.adoptme.data.repository
 import com.adoptme.data.api.HuachitosApiService
 import com.adoptme.data.api.HuachitosClient
 import com.adoptme.data.datasource.LocalDataSource
+import com.adoptme.data.model.AnimalSource
 import com.adoptme.data.model.Dog
 import com.adoptme.data.model.Report
 import com.adoptme.data.model.toDog
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
 /**
  * INTERFAZ DE REPOSITORIO DE ANIMALES Y REPORTES
@@ -30,12 +35,21 @@ interface DogRepository {
     fun getInterestedDogs(): List<Dog>
 
     suspend fun fetchDogsFromApi(): Result<List<Dog>>
+
+    /**
+     * Devuelve la portada y, para fichas de Huachitos, las fotos adicionales
+     * que la página pública del animal tenga disponibles.
+     */
+    suspend fun fetchGallery(dog: Dog): List<String>
 }
 
 class DogRepositoryImpl(
     private val localDataSource: LocalDataSource = LocalDataSource(),
     private val api: HuachitosApiService = HuachitosClient.service
 ) : DogRepository {
+
+    private val httpClient = OkHttpClient()
+    private val galleryCache = mutableMapOf<String, List<String>>()
 
     override val interestedDogs: StateFlow<List<Dog>> = localDataSource.interestedDogsFlow
     override val myPets: StateFlow<List<Dog>> = localDataSource.myPetsFlow
@@ -75,5 +89,32 @@ class DogRepositoryImpl(
             .filter { it.estado.isNullOrBlank() || it.estado.equals("adopcion", ignoreCase = true) }
             .map { it.toDog() }
             .distinctBy { "${it.source}-${it.externalId ?: it.id}" }
+    }
+
+    override suspend fun fetchGallery(dog: Dog): List<String> {
+        val cover = listOfNotNull(dog.imageUrl)
+        if (dog.source != AnimalSource.HUACHITOS || dog.sourceUrl.isNullOrBlank()) {
+            return cover
+        }
+
+        galleryCache[dog.sourceUrl]?.let { return it }
+
+        val gallery = withContext(Dispatchers.IO) {
+            runCatching {
+                val request = Request.Builder()
+                    .url(dog.sourceUrl)
+                    .header("User-Agent", "AdoptMe/0.1")
+                    .build()
+
+                httpClient.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) return@runCatching cover
+                    val html = response.body?.string().orEmpty()
+                    GalleryParser.parse(html, dog.sourceUrl, cover)
+                }
+            }.getOrDefault(cover)
+        }
+
+        galleryCache[dog.sourceUrl] = gallery
+        return gallery
     }
 }

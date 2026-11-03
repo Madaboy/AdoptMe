@@ -35,7 +35,7 @@ import com.adoptme.ui.theme.OrangeAccent
  *
  * Publicar · Reportes · [Adoptar] · Intereses · Mi Mascota
  *
- * "Adoptar" es la cápsula central naranja y la acción principal.
+ * "Adoptar" es el botón circular naranja con la huella y la acción principal.
  * "Publicar" ocupa la primera posición y abre el formulario a pantalla completa.
  */
 @Composable
@@ -194,30 +194,18 @@ private fun RowScope.CenterAdoptItem(onClick: () -> Unit) {
     Surface(
         onClick = onClick,
         modifier = Modifier
-            .padding(horizontal = 4.dp)
-            .height(52.dp)
-            .widthIn(min = 88.dp),
-        shape = RoundedCornerShape(50),
+            .padding(horizontal = 7.dp)
+            .size(56.dp),
+        shape = CircleShape,
         color = OrangeAccent,
         shadowElevation = 8.dp
     ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 13.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Box(contentAlignment = Alignment.Center) {
             Icon(
                 painter = painterResource(R.drawable.ic_paw),
-                contentDescription = null,
+                contentDescription = "Adoptar",
                 tint = Color.White,
-                modifier = Modifier.size(19.dp)
-            )
-            Spacer(Modifier.width(6.dp))
-            Text(
-                text = "Adoptar",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.White
+                modifier = Modifier.size(26.dp)
             )
         }
     }

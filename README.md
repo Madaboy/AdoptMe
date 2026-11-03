@@ -11,7 +11,7 @@ Fase 0 completada en lo funcional:
 - ViewModel por pantalla y repositorio como interfaz.
 - Persistencia local de intereses, publicaciones propias y reportes.
 - Publicación con foto desde el selector del sistema, sin permisos de almacenamiento.
-- Ficha de detalle completa en hoja inferior, accesible desde Adoptar, Intereses y Mi Mascota.
+- Ficha de detalle en formato carta con galería de todas las fotos de Huachitos, accesible desde Adoptar, Intereses y Mi Mascota.
 - Sin datos de ejemplo visibles en producción.
 - Tests unitarios, lint sin errores y CI de GitHub Actions.
 
@@ -34,7 +34,7 @@ Pendiente de infraestructura: Supabase, Google Maps, Crashlytics y sincronizaci�
 | **Mi Mascota** | Publicaciones propias con foto y ficha de detalle, acceso a ajustes |
 | **Más** | Funcionalidades futuras con Feature Flags |
 
-El botón central **Adoptar** es una cápsula ovalada con la huella. **Publicar** ocupa la primera posición de la barra y abre el formulario a pantalla completa; no usa “+”: publicar una adopción es un acto de cuidado.
+El botón central **Adoptar** es un círculo naranja con la huella, sin texto. **Publicar** ocupa la primera posición de la barra y abre el formulario a pantalla completa; no usa “+”: publicar una adopción es un acto de cuidado.
 
 ## Arquitectura
 
@@ -111,7 +111,7 @@ export PATH="$JAVA_HOME/bin:$PATH"
 Salida:
 
 - APK: `app/build/outputs/apk/debug/app-debug.apk`
-- Tests: 13 pruebas unitarias
+- Tests: 15 pruebas unitarias
 - Lint: 0 errores
 
 ## Tests cubiertos
@@ -121,6 +121,7 @@ Salida:
 - Paginación, filtro por estado y deduplicación.
 - Intereses sin duplicados y eliminación.
 - Persistencia de intereses, mascotas, reportes y ruta de la foto entre instancias.
+- Extracción y deduplicación de la galería de fotos de Huachitos.
 - Recuperación ante estado local corrupto.
 
 ## Integración continua

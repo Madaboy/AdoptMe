@@ -85,7 +85,7 @@ sincronización entre dispositivos, mapas reales ni notificaciones push.
 ### Verificación de referencia al cierre de esta etapa
 
 - `./gradlew assembleDebug testDebugUnitTest lintDebug` → **BUILD SUCCESSFUL**
-- **13 tests unitarios** pasando.
+- **15 tests unitarios** pasando.
 - Lint: **0 errores, 27 warnings** (principalmente versiones de dependencias).
 - APK debug: `app/build/outputs/apk/debug/app-debug.apk` (~12 MB).
 - CI: `.github/workflows/android.yml`.
@@ -204,6 +204,9 @@ DogRepository (interfaz)
 5. Mapea con `HuachitosAnimal.toDog()` y limpia HTML con `HtmlText`.
 6. Deduplica por `source + externalId`.
 7. `HomeViewModel` aplica el filtro de especie y expone la lista.
+8. Al abrir una ficha, `DogRepository.fetchGallery()` lee la página pública del
+   animal y extrae las fotos adicionales de `/storage/animal-images/`; la API
+   solo entrega una portada por mascota.
 
 La API no entrega tamaño, energía, compatibilidad ni distancia: esos campos
 quedan en `null`. No los inventes.
@@ -230,7 +233,8 @@ app/src/main/java/com/adoptme/
 │   ├── model/Dog.kt
 │   ├── model/HuachitosModels.kt
 │   ├── model/Report.kt
-│   └── repository/DogRepository.kt
+│   ├── repository/DogRepository.kt
+│   └── repository/GalleryParser.kt
 ├── ui/
 │   ├── components/                # Barra inferior, chips, formularios, toasts
 │   ├── screens/                   # Home, Publish, Reports, Interests, MyPet, More
@@ -266,8 +270,8 @@ app/src/test/java/com/adoptme/
 ### Navegación
 
 - Barra inferior: **Publicar · Reportes · [Adoptar] · Intereses · Mi Mascota**.
-- “Adoptar” es la **cápsula ovalada central** y la acción principal: abre el
-  catálogo de mascotas.
+- “Adoptar” es el **botón circular central** con la huella y la acción
+  principal: abre el catálogo de mascotas.
 - “Publicar” ocupa la primera posición y abre el formulario a pantalla completa.
 - “Más” se abre desde Mi Mascota; no ocupa una posición en la barra.
 - No cambies la navegación a una barra de 5 pestañas.
@@ -276,8 +280,9 @@ app/src/test/java/com/adoptme/
 ### Ficha de detalle
 
 - Se abre desde Adoptar, Intereses y Mi Mascota.
-- Debe mostrar foto, nombre, especie, ubicación, descripción completa, ficha,
-  salud/convivencia, necesidades especiales y fuente.
+- Debe mostrar galería de fotos, nombre, ubicación, tarjetas pastel de
+  sexo/edad/raza, descripción completa, ficha, salud/convivencia, necesidades
+  especiales y fuente.
 - Para publicaciones propias, indica “Esta ficha es tu publicación” y no
   ofrezcas guardarla como interés.
 - Mantén el detalle en `ModalBottomSheet` salvo que el usuario pida otra cosa.
@@ -333,11 +338,12 @@ los tests de persistencia y considera una migración de versión.
 
 ## 11. Tests y calidad
 
-Tests existentes (13):
+Tests existentes (15):
 
 - Contrato de Huachitos y mapeo de especies.
 - Limpieza de HTML/entidades.
 - Paginación, filtro de estado y deduplicación.
+- Extracción y deduplicación de la galería de fotos.
 - Intereses sin duplicados y eliminación.
 - Persistencia de intereses, mascotas, reportes y ruta de foto.
 - Recuperación ante estado corrupto.
