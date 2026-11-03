@@ -11,7 +11,7 @@ Fase 0 completada en lo funcional:
 - ViewModel por pantalla y repositorio como interfaz.
 - Persistencia local de intereses, publicaciones propias y reportes.
 - Publicación con foto desde el selector del sistema, sin permisos de almacenamiento.
-- Ficha de detalle en formato carta con galería de todas las fotos de Huachitos, accesible desde Adoptar, Intereses y Mi Mascota.
+- Ficha de detalle en formato carta con galería de todas las fotos de Huachitos y visor a pantalla completa, accesible desde Adoptar, Intereses y Mi Mascota.
 - Sin datos de ejemplo visibles en producción.
 - Tests unitarios, lint sin errores y CI de GitHub Actions.
 

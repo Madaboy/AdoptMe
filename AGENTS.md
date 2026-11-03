@@ -284,9 +284,9 @@ app/src/test/java/com/adoptme/
 ### Ficha de detalle
 
 - Se abre desde Adoptar, Intereses y Mi Mascota.
-- Debe mostrar galería de fotos, nombre, ubicación, tarjetas pastel de
-  sexo/edad/raza, descripción completa, ficha, salud/convivencia, necesidades
-  especiales y fuente.
+- Debe mostrar galería de fotos con visor a pantalla completa, nombre, ubicación,
+  tarjetas pastel de sexo/edad/raza, descripción completa, ficha,
+  salud/convivencia, necesidades especiales y fuente.
 - Para publicaciones propias, indica “Esta ficha es tu publicación” y no
   ofrezcas guardarla como interés.
 - Mantén el detalle en `ModalBottomSheet` salvo que el usuario pida otra cosa.

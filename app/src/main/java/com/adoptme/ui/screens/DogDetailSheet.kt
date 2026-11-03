@@ -7,6 +7,7 @@ package com.adoptme.ui.screens
 
 import android.content.Intent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
@@ -16,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Share
@@ -38,6 +40,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.adoptme.R
@@ -70,6 +74,7 @@ fun DogDetailSheet(
     }
     val images = gallery.ifEmpty { listOfNotNull(dog.imageUrl) }
     val pagerState = rememberPagerState(pageCount = { images.size.coerceAtLeast(1) })
+    var fullscreenPage by remember { mutableStateOf<Int?>(null) }
 
     LaunchedEffect(dog.sourceUrl, dog.imageUrl) {
         gallery = AppContainer.repository.fetchGallery(dog)
@@ -95,7 +100,8 @@ fun DogDetailSheet(
                     pagerState = pagerState,
                     isInterested = isInterested,
                     onClose = onDismiss,
-                    onToggleInterest = onToggleInterest
+                    onToggleInterest = onToggleInterest,
+                    onOpenImage = { fullscreenPage = it }
                 )
             }
 
@@ -253,6 +259,15 @@ fun DogDetailSheet(
             }
         }
     }
+
+    val fullscreen = fullscreenPage
+    if (fullscreen != null && images.isNotEmpty()) {
+        FullScreenGalleryDialog(
+            images = images,
+            initialPage = fullscreen.coerceIn(0, images.lastIndex),
+            onDismiss = { fullscreenPage = null }
+        )
+    }
 }
 
 @Composable
@@ -262,7 +277,8 @@ private fun DetailPhotoHeader(
     pagerState: PagerState,
     isInterested: Boolean,
     onClose: () -> Unit,
-    onToggleInterest: () -> Unit
+    onToggleInterest: () -> Unit,
+    onOpenImage: (Int) -> Unit
 ) {
     val fallbackColor = remember(dog.backgroundColorHex) {
         runCatching {
@@ -290,7 +306,9 @@ private fun DetailPhotoHeader(
                     SubcomposeAsyncImage(
                         model = image,
                         contentDescription = "Foto ${page + 1} de ${dog.name}",
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clickable { onOpenImage(page) },
                         contentScale = ContentScale.Crop,
                         loading = {
                             Box(
@@ -625,6 +643,129 @@ private fun CircleDetailButton(
     ) {
         Box(contentAlignment = Alignment.Center) {
             content()
+        }
+    }
+}
+
+@Composable
+private fun FullScreenGalleryDialog(
+    images: List<String>,
+    initialPage: Int,
+    onDismiss: () -> Unit
+) {
+    val pagerState = rememberPagerState(
+        initialPage = initialPage,
+        pageCount = { images.size }
+    )
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+        ) {
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize(),
+                userScrollEnabled = images.size > 1
+            ) { page ->
+                SubcomposeAsyncImage(
+                    model = images[page],
+                    contentDescription = "Foto ${page + 1} de ${images.size}",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Fit,
+                    loading = {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(color = Color.White)
+                        }
+                    },
+                    error = {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "No se pudo cargar la imagen",
+                                color = Color.White,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    },
+                    success = { SubcomposeAsyncImageContent() }
+                )
+            }
+
+            Surface(
+                onClick = onDismiss,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .statusBarsPadding()
+                    .padding(16.dp)
+                    .size(44.dp),
+                shape = CircleShape,
+                color = Color.White.copy(alpha = 0.16f)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "Cerrar imagen",
+                        tint = Color.White,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+            }
+
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .statusBarsPadding()
+                    .padding(16.dp),
+                shape = RoundedCornerShape(50),
+                color = Color.White.copy(alpha = 0.14f)
+            ) {
+                Text(
+                    text = "${pagerState.currentPage + 1} / ${images.size}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp)
+                )
+            }
+
+            if (images.size > 1) {
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .navigationBarsPadding()
+                        .padding(bottom = 24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    repeat(images.size) { index ->
+                        Box(
+                            modifier = Modifier
+                                .height(7.dp)
+                                .width(if (index == pagerState.currentPage) 18.dp else 7.dp)
+                                .background(
+                                    if (index == pagerState.currentPage) {
+                                        Color.White
+                                    } else {
+                                        Color.White.copy(alpha = 0.45f)
+                                    },
+                                    RoundedCornerShape(50)
+                                )
+                        )
+                    }
+                }
+            }
         }
     }
 }
