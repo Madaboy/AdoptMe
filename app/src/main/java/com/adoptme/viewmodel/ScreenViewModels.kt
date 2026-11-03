@@ -201,16 +201,29 @@ class ReportsViewModel(
     private val _toastMessage = MutableStateFlow<String?>(null)
     val toastMessage: StateFlow<String?> = _toastMessage.asStateFlow()
 
-    fun addReport(type: ReportType, location: String, description: String) {
+    fun addReport(
+        type: ReportType,
+        location: String,
+        description: String,
+        latitude: Double? = null,
+        longitude: Double? = null
+    ) {
         val newReport = Report(
             id = repository.getNextReportId(),
             type = type,
             location = location,
             description = description,
-            timeAgo = "Ahora"
+            timeAgo = "Ahora",
+            latitude = latitude,
+            longitude = longitude,
+            createdAt = System.currentTimeMillis()
         )
         repository.addReport(newReport)
-        _toastMessage.value = "🚨 Reporte guardado. Se enviará al equipo cuando el backend esté activo."
+        _toastMessage.value = if (latitude != null && longitude != null) {
+            "🚨 Reporte guardado y ubicado en el mapa."
+        } else {
+            "🚨 Reporte guardado sin ubicación en el mapa."
+        }
     }
 
     fun showToast(msg: String) {

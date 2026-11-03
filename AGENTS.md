@@ -50,7 +50,8 @@ el campo queda en `null` y la UI muestra “No informado” o lo omite. Nunca se
 rellenan valores para “completar” una ficha.
 
 Alcance actual: MVP Android local. No hay backend, autenticación real,
-sincronización entre dispositivos, mapas reales ni notificaciones push.
+sincronización entre dispositivos, alertas compartidas ni notificaciones push.
+El mapa local de reportes ya usa MapLibre + OpenStreetMap.
 
 ---
 
@@ -75,7 +76,8 @@ sincronización entre dispositivos, mapas reales ni notificaciones push.
 
 - Supabase: Auth, Postgres, Storage y RLS. **Requiere credenciales.**
 - Sincronización de intereses, publicaciones y fotos entre dispositivos.
-- Google Maps para reportes y lugares pet-friendly. **Requiere API key.**
+- Alertas compartidas y lugares pet-friendly: requieren backend. El mapa
+  local ya funciona con MapLibre/OSM y permiso de ubicación.
 - Crashlytics. **Requiere configuración de Firebase.**
 - Contacto/coordinación de adopciones dentro de la app.
 - Notificaciones push.
@@ -85,7 +87,7 @@ sincronización entre dispositivos, mapas reales ni notificaciones push.
 ### Verificación de referencia al cierre de esta etapa
 
 - `./gradlew assembleDebug testDebugUnitTest lintDebug` → **BUILD SUCCESSFUL**
-- **15 tests unitarios** pasando.
+- **17 tests unitarios** pasando.
 - Lint: **0 errores, 27 warnings** (principalmente versiones de dependencias).
 - APK debug: `app/build/outputs/apk/debug/app-debug.apk` (~12 MB).
 - CI: `.github/workflows/android.yml`.
@@ -110,6 +112,8 @@ puede haber cambiado.
 | Persistencia | DataStore Preferences + Gson |
 | Red | Retrofit 2.11 + Gson |
 | Imágenes | Coil 2.6 |
+| Mapas | MapLibre 11.8 + OpenStreetMap (OpenFreeMap) |
+| Ubicación | LocationManager del sistema + permisos runtime |
 | HTML | Jsoup 1.18.1 |
 | Tests | JUnit 4 + kotlinx-coroutines-test |
 
@@ -338,14 +342,15 @@ los tests de persistencia y considera una migración de versión.
 
 ## 11. Tests y calidad
 
-Tests existentes (15):
+Tests existentes (17):
 
 - Contrato de Huachitos y mapeo de especies.
 - Limpieza de HTML/entidades.
 - Paginación, filtro de estado y deduplicación.
 - Extracción y deduplicación de la galería de fotos.
+- Cálculo de distancia para alertas cercanas.
 - Intereses sin duplicados y eliminación.
-- Persistencia de intereses, mascotas, reportes y ruta de foto.
+- Persistencia de intereses, mascotas, reportes, coordenadas y ruta de foto.
 - Recuperación ante estado corrupto.
 
 Reglas:
@@ -401,7 +406,8 @@ No subas tokens, contraseñas, keystores ni `local.properties`.
 - No hay indicador de carga mientras DataStore restaura el estado local.
 - “Compartir ficha” en Mi Mascota todavía muestra un toast de “próximamente”.
 - No se pueden editar ni cerrar publicaciones propias.
-- Los reportes son locales y no tienen mapa ni foto.
+- Los reportes son locales: el mapa solo muestra los de este dispositivo y no
+  tienen foto ni sincronización.
 - El detalle no tiene contacto directo ni reporte de ficha.
 - No hay pruebas instrumentadas/UI.
 - Lint tiene 27 warnings de versiones; no son errores.
@@ -427,7 +433,7 @@ Estas son oportunidades, no excusas para inventar datos o romper el MVP.
 1. Supabase Auth, Postgres, Storage y RLS.
 2. Sincronización de intereses, publicaciones y fotos.
 3. Contacto y notificaciones.
-4. Google Maps para reportes y lugares pet-friendly.
+4. Backend para alertas compartidas y lugares pet-friendly.
 5. Crashlytics y analítica.
 
 ### Fuera de alcance por ahora

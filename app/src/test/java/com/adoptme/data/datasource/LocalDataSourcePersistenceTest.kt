@@ -47,7 +47,10 @@ class LocalDataSourcePersistenceTest {
                 type = ReportType.DANGER,
                 location = "Av. Grecia 890",
                 description = "Perro herido",
-                timeAgo = "Ahora"
+                timeAgo = "Ahora",
+                latitude = -33.45,
+                longitude = -70.66,
+                createdAt = 123456789L
             )
         )
         advanceUntilIdle()
@@ -68,6 +71,9 @@ class LocalDataSourcePersistenceTest {
         )
         assertEquals(1, second.getReports().size)
         assertEquals("Av. Grecia 890", second.getReports().first().location)
+        assertEquals(-33.45, second.getReports().first().latitude!!, 0.0001)
+        assertEquals(-70.66, second.getReports().first().longitude!!, 0.0001)
+        assertEquals(123456789L, second.getReports().first().createdAt)
 
         secondScope.cancel()
     }

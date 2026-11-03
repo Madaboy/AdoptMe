@@ -15,7 +15,7 @@ Fase 0 completada en lo funcional:
 - Sin datos de ejemplo visibles en producción.
 - Tests unitarios, lint sin errores y CI de GitHub Actions.
 
-Pendiente de infraestructura: Supabase, Google Maps, Crashlytics y sincronización entre dispositivos.
+Pendiente de infraestructura: Supabase/backend para alertas compartidas, Crashlytics y sincronización entre dispositivos. El mapa local ya usa MapLibre + OpenStreetMap.
 
 ## Repositorio y colaboración
 
@@ -28,7 +28,7 @@ Pendiente de infraestructura: Supabase, Google Maps, Crashlytics y sincronizaci�
 | Sección | Estado |
 | :--- | :--- |
 | **Adoptar** | Catálogo real, swipe, foto a pantalla completa con etiquetas y ficha con galería |
-| **Reportes** | Crear y listar reportes locales; mapa real pendiente |
+| **Reportes** | Crear y listar reportes locales; mapa MapLibre/OSM con ubicación y radio de alertas |
 | **Publicar** | Ficha de adopción con foto, especie, edad, salud, convivencia y descripción |
 | **Intereses** | Mascotas guardadas, ficha de detalle, eliminar interés, badge en la barra |
 | **Mi Mascota** | Publicaciones propias con foto y ficha de detalle, acceso a ajustes |
@@ -111,7 +111,7 @@ export PATH="$JAVA_HOME/bin:$PATH"
 Salida:
 
 - APK: `app/build/outputs/apk/debug/app-debug.apk`
-- Tests: 15 pruebas unitarias
+- Tests: 17 pruebas unitarias
 - Lint: 0 errores
 
 ## Tests cubiertos
@@ -122,6 +122,8 @@ Salida:
 - Intereses sin duplicados y eliminación.
 - Persistencia de intereses, mascotas, reportes y ruta de la foto entre instancias.
 - Extracción y deduplicación de la galería de fotos de Huachitos.
+- Cálculo de distancia para alertas cercanas.
+- Persistencia de coordenadas y fecha de reportes.
 - Recuperación ante estado local corrupto.
 
 ## Integración continua
@@ -134,10 +136,10 @@ Salida:
 
 ## Limitaciones conocidas
 
-- Las publicaciones, intereses y reportes son locales: no se sincronizan entre dispositivos.
+- Las publicaciones, intereses y reportes son locales: no se sincronizan entre dispositivos. El mapa muestra únicamente los reportes de este teléfono.
 - Las fotos se copian al almacenamiento privado del dispositivo y no se suben a la nube.
 - No hay registro/login todavía; requiere Supabase Auth.
-- El mapa de Google Maps está pendiente de API key.
+- Las alertas compartidas entre usuarios requieren backend; el mapa local ya funciona con MapLibre/OSM.
 - Las secciones de chat, comunidad, tienda y gamificación están deshabilitadas por Feature Flags.
 
 ## Próximos pasos
@@ -145,5 +147,5 @@ Salida:
 1. Supabase: Auth, Postgres, Storage y RLS.
 2. Sincronización de publicaciones, intereses y fotos entre dispositivos.
 3. Contacto y coordinación de adopciones dentro de la app.
-4. Google Maps con reportes y lugares pet-friendly.
+4. Backend para alertas compartidas y lugares pet-friendly.
 5. Crashlytics y métricas de uso.

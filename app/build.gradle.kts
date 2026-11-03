@@ -88,4 +88,9 @@ dependencies {
     // HTML de descripciones (Huachitos entrega <p> y <br>)
     // -------------------------------------------------------
     implementation(libs.jsoup)
+
+    // -------------------------------------------------------
+    // Mapa local-first: MapLibre + OpenStreetMap
+    // -------------------------------------------------------
+    implementation(libs.maplibre.android)
 }

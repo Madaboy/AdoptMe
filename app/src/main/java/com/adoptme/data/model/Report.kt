@@ -9,7 +9,10 @@ data class Report(
     val type: ReportType,
     val location: String,
     val description: String,
-    val timeAgo: String
+    val timeAgo: String,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val createdAt: Long = 0L
 )
 
 enum class ReportType(val label: String, val emoji: String) {
