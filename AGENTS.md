@@ -68,7 +68,8 @@ El mapa local de reportes ya usa MapLibre + OpenStreetMap.
   logotipo SVG, Google demo, casillas de términos/privacidad/mayoría de edad y
   enlace de login, sin persistencia ni autenticación. Textos base alineados a
   Ley 21.719 y 21.020.
-- Publicación de mascota con foto desde el Photo Picker del sistema.
+- Publicación de mascota por pasos (fotos → descripción → confirmación legal)
+  con selección múltiple de fotos desde el Photo Picker del sistema.
 - Ficha de detalle completa en `ModalBottomSheet`.
 - Intereses persistentes en DataStore.
 - Publicaciones propias persistentes.
@@ -409,8 +410,8 @@ No subas tokens, contraseñas, keystores ni `local.properties`.
   pantalla logeada todavía no existe. `SessionManager` queda preparado para el
   futuro, pero la UI actual no lo usa.
 - Las fotos no se comprimen ni se corrigen según EXIF; se copian tal cual.
-- El formulario de publicación usa `remember`, no `rememberSaveable`: una
-  rotación o muerte del proceso puede perder el borrador.
+- El formulario de publicación es por pasos; el texto usa `rememberSaveable`,
+  pero las fotos seleccionadas no se conservan al rotar el dispositivo.
 - No hay indicador de carga mientras DataStore restaura el estado local.
 - La sección Mi Mascota y “Más” quedan ocultas hasta implementar la cuenta logeada.
 - No se pueden editar ni cerrar publicaciones propias.
