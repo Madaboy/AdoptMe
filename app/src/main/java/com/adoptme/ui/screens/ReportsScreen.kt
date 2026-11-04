@@ -67,6 +67,7 @@ fun ReportsScreen(
     var radiusKm by rememberSaveable { mutableStateOf(10f) }
     var detailReport by remember { mutableStateOf<Report?>(null) }
     var showForm by remember { mutableStateOf(false) }
+    var showAlerts by remember { mutableStateOf(false) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -307,107 +308,48 @@ fun ReportsScreen(
         }
 
         Surface(
+            onClick = { showAlerts = true },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-            color = MaterialTheme.colorScheme.surface,
-            shadowElevation = 14.dp
+                .padding(bottom = 16.dp, start = 24.dp, end = 24.dp),
+            shape = RoundedCornerShape(50),
+            color = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.9f),
+            shadowElevation = 10.dp
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+            Row(
+                modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                if (userLocation != null) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .horizontalScroll(rememberScrollState()),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        radiusOptions.forEach { radius ->
-                            RadiusChip(
-                                label = "${radius.toInt()} km",
-                                selected = radiusKm == radius,
-                                onClick = { radiusKm = radius }
-                            )
-                        }
-                    }
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                Surface(
+                    shape = CircleShape,
+                    color = Color(0xFF2F80ED),
+                    modifier = Modifier.size(30.dp)
                 ) {
-                    Text(
-                        text = "Alertas cercanas",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Spacer(Modifier.weight(1f))
-                    Surface(
-                        shape = RoundedCornerShape(50),
-                        color = MaterialTheme.colorScheme.primaryContainer
-                    ) {
-                        Text(
-                            text = "${nearbyReports.size}",
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.padding(horizontal = 11.dp, vertical = 5.dp)
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_pin),
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(17.dp)
                         )
                     }
                 }
-
-                if (nearbyReports.isEmpty()) {
-                    Card(
-                        shape = RoundedCornerShape(20.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_pin),
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.size(28.dp)
-                            )
-                            Text(
-                                text = if (userLocation != null) {
-                                    "No hay alertas en este radio"
-                                } else {
-                                    "Aún no hay alertas ubicadas"
-                                },
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = "Toca Reportar para agregar la primera.",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier.heightIn(max = 300.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(nearbyReports, key = { it.report.id }) { nearby ->
-                            ReportListItem(
-                                report = nearby.report,
-                                distanceKm = nearby.distanceKm,
-                                onClick = { detailReport = nearby.report }
-                            )
-                        }
-                    }
+                Column {
+                    Text(
+                        text = if (nearbyReports.isEmpty()) {
+                            "Sin alertas cercanas"
+                        } else {
+                            "${nearbyReports.size} alerta${if (nearbyReports.size == 1) "" else "s"} cerca"
+                        },
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.inverseOnSurface
+                    )
+                    Text(
+                        text = "${radiusKm.toInt()} km · toca para ver",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = 0.7f)
+                    )
                 }
             }
         }
@@ -421,6 +363,19 @@ fun ReportsScreen(
             report = selected,
             distanceKm = distance,
             onDismiss = { detailReport = null }
+        )
+    }
+
+    if (showAlerts) {
+        AlertListSheet(
+            nearbyReports = nearbyReports,
+            radiusKm = radiusKm,
+            onRadiusChange = { radiusKm = it },
+            onSelect = {
+                detailReport = it
+                showAlerts = false
+            },
+            onDismiss = { showAlerts = false }
         )
     }
 
@@ -458,13 +413,107 @@ private data class NearbyReport(
 )
 
 @Composable
+private fun AlertListSheet(
+    nearbyReports: List<NearbyReport>,
+    radiusKm: Float,
+    onRadiusChange: (Float) -> Unit,
+    onSelect: (Report) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+        dragHandle = { BottomSheetDefaults.DragHandle() }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            Text(
+                text = "Alertas cercanas",
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                radiusOptions.forEach { radius ->
+                    RadiusChip(
+                        label = "${radius.toInt()} km",
+                        selected = radiusKm == radius,
+                        onClick = { onRadiusChange(radius) }
+                    )
+                }
+            }
+
+            if (nearbyReports.isEmpty()) {
+                Card(
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_pin),
+                            contentDescription = null,
+                            tint = Color(0xFF2F80ED),
+                            modifier = Modifier.size(30.dp)
+                        )
+                        Text(
+                            text = "No hay alertas en este radio",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = "Toca Reportar para agregar la primera.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.heightIn(max = 420.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(nearbyReports, key = { it.report.id }) { nearby ->
+                        ReportListItem(
+                            report = nearby.report,
+                            distanceKm = nearby.distanceKm,
+                            onClick = { onSelect(nearby.report) }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun ReportListItem(
     report: Report,
     distanceKm: Double?,
     onClick: () -> Unit
 ) {
-    val (iconBg, iconFg) = reportTypeColors(report.type)
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -478,19 +527,12 @@ private fun ReportListItem(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .size(44.dp)
-                    .background(iconBg, RoundedCornerShape(14.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_pin),
-                    contentDescription = null,
-                    tint = iconFg,
-                    modifier = Modifier.size(22.dp)
-                )
-            }
+            Icon(
+                painter = painterResource(R.drawable.ic_pin),
+                contentDescription = null,
+                tint = Color(0xFF2F80ED),
+                modifier = Modifier.size(26.dp)
+            )
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -519,12 +561,6 @@ private fun ReportListItem(
                 )
             }
 
-            Icon(
-                imageVector = Icons.Filled.Place,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.outline,
-                modifier = Modifier.size(18.dp)
-            )
         }
     }
 }
@@ -536,7 +572,6 @@ private fun ReportDetailSheet(
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val (iconBg, iconFg) = reportTypeColors(report.type)
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -556,19 +591,12 @@ private fun ReportDetailSheet(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(56.dp)
-                        .background(iconBg, RoundedCornerShape(18.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_pin),
-                        contentDescription = null,
-                        tint = iconFg,
-                        modifier = Modifier.size(28.dp)
-                    )
-                }
+                Icon(
+                    painter = painterResource(R.drawable.ic_pin),
+                    contentDescription = null,
+                    tint = Color(0xFF2F80ED),
+                    modifier = Modifier.size(38.dp)
+                )
                 Spacer(Modifier.width(14.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
@@ -842,18 +870,6 @@ private fun RadiusChip(
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
         )
     }
-}
-
-@Composable
-private fun reportTypeColors(type: ReportType): Pair<Color, Color> = when (type) {
-    ReportType.DANGER ->
-        MaterialTheme.colorScheme.errorContainer to MaterialTheme.colorScheme.onErrorContainer
-    ReportType.LOST ->
-        MaterialTheme.colorScheme.secondaryContainer to MaterialTheme.colorScheme.onSecondaryContainer
-    ReportType.AT_RISK ->
-        MaterialTheme.colorScheme.tertiaryContainer to MaterialTheme.colorScheme.onTertiaryContainer
-    ReportType.STREET ->
-        MaterialTheme.colorScheme.primaryContainer to MaterialTheme.colorScheme.onPrimaryContainer
 }
 
 private fun reportTimeAgo(report: Report): String {
