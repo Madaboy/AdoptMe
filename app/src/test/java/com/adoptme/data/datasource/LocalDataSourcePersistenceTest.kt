@@ -50,7 +50,8 @@ class LocalDataSourcePersistenceTest {
                 timeAgo = "Ahora",
                 latitude = -33.45,
                 longitude = -70.66,
-                createdAt = 123456789L
+                createdAt = 123456789L,
+                imagePath = "file:///data/user/0/com.adoptme/files/report_images/report.webp"
             )
         )
         advanceUntilIdle()
@@ -74,6 +75,10 @@ class LocalDataSourcePersistenceTest {
         assertEquals(-33.45, second.getReports().first().latitude!!, 0.0001)
         assertEquals(-70.66, second.getReports().first().longitude!!, 0.0001)
         assertEquals(123456789L, second.getReports().first().createdAt)
+        assertEquals(
+            "file:///data/user/0/com.adoptme/files/report_images/report.webp",
+            second.getReports().first().imagePath
+        )
 
         secondScope.cancel()
     }

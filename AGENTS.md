@@ -73,8 +73,8 @@ El mapa local de reportes ya usa MapLibre + OpenStreetMap.
 - Ficha de detalle completa en `ModalBottomSheet`.
 - Intereses persistentes en DataStore.
 - Publicaciones propias persistentes.
-- Reportes locales persistentes, con mapa a pantalla completa, alertas cercanas
-  y ficha de alerta al tocar un marcador o una tarjeta.
+- Reportes locales persistentes, con mapa a pantalla completa, alertas cercanas,
+  ficha de alerta y wizard de reporte en 3 pasos con 1 foto.
 - Recuperación ante estado local corrupto.
 - Tests unitarios y lint sin errores.
 - Workflow de GitHub Actions para compilar, testear y ejecutar lint.
@@ -341,6 +341,9 @@ Paleta **Coral & Crema**:
   sesión.
 - Las fotos locales se guardan en `filesDir/pet_images`; el JSON solo conserva
   el URI.
+- Las fotos de reportes se comprimen a WebP (máx. 1280 px, ~600 KB) en
+  `filesDir/report_images`. En el backend se guarda solo la clave de object
+  storage en la base de datos, nunca el binario ni base64.
 
 Si agregas un campo persistido, actualiza `PersistedState`, la serialización,
 los tests de persistencia y considera una migración de versión.

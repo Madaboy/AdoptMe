@@ -29,7 +29,7 @@ Pendiente de infraestructura: Supabase/backend para alertas compartidas, Crashly
 | Sección | Estado |
 | :--- | :--- |
 | **Adoptar** | Catálogo real, swipe, foto a pantalla completa con etiquetas y ficha con galería |
-| **Reportes** | Mapa MapLibre/OSM a pantalla completa, alertas con ficha al tocarlas y reporte desde la app |
+| **Reportes** | Mapa a pantalla completa, alertas con ficha y wizard de reporte en 3 pasos con 1 foto |
 | **Publicar** | Ficha de adopción por pasos: fotos → descripción → confirmación legal, con acabado visual “liquid glass” |
 | **Intereses** | Mascotas guardadas, ficha de detalle, eliminar interés, badge en la barra |
 | **Mi Cuenta** | Creación de cuenta front-end con iconos SVG, Google demo y casillas Ley 21.719/21.020 |
@@ -57,6 +57,7 @@ DogRepository (interfaz)
 - **PersistedState v1**: intereses, publicaciones propias y reportes.
 - **HtmlText**: limpia el HTML de Huachitos con Jsoup antes de mostrarlo.
 - **PetImageStore**: copia la foto elegida a `filesDir/pet_images` y guarda un URI `file://` en la publicación.
+- **ReportImageStore**: comprime la foto del reporte a WebP (máx. 1280 px y ~600 KB) en `filesDir/report_images`. En la base de datos se guardará solo la clave/URL de object storage, nunca el binario ni base64.
 - **DogDetailSheet**: ficha completa en `ModalBottomSheet`, sin ruta de navegación adicional.
 - **Regla de datos**: los campos ausentes quedan en `null`; la UI los omite o muestra “No informado”.
 

@@ -211,7 +211,8 @@ class ReportsViewModel(
         location: String,
         description: String,
         latitude: Double? = null,
-        longitude: Double? = null
+        longitude: Double? = null,
+        imagePath: String? = null
     ) {
         val newReport = Report(
             id = repository.getNextReportId(),
@@ -221,7 +222,8 @@ class ReportsViewModel(
             timeAgo = "Ahora",
             latitude = latitude,
             longitude = longitude,
-            createdAt = System.currentTimeMillis()
+            createdAt = System.currentTimeMillis(),
+            imagePath = imagePath
         )
         repository.addReport(newReport)
         _toastMessage.value = if (latitude != null && longitude != null) {

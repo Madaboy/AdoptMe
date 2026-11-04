@@ -27,7 +27,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import coil.compose.AsyncImage
 import com.adoptme.R
 import com.adoptme.core.location.LocationProvider
 import com.adoptme.data.model.Report
@@ -150,6 +153,34 @@ fun ReportsScreen(
                 .filter { it.distanceKm != null && it.distanceKm <= radiusKm }
                 .sortedBy { it.distanceKm }
         }
+    }
+
+    if (showForm) {
+        ReportWizard(
+            userLocation = userLocation,
+            onClose = { showForm = false },
+            onSubmit = { type, location, description, imagePath ->
+                val coords = userLocation
+                val finalLocation = location.trim().ifBlank {
+                    coords?.let {
+                        "Ubicación actual (${"%.4f".format(it.latitude)}, ${"%.4f".format(it.longitude)})"
+                    }.orEmpty()
+                }
+                if (finalLocation.isNotBlank()) {
+                    viewModel.addReport(
+                        type = type,
+                        location = finalLocation,
+                        description = description,
+                        latitude = coords?.latitude,
+                        longitude = coords?.longitude,
+                        imagePath = imagePath
+                    )
+                    showForm = false
+                }
+            },
+            onShowToast = onShowToast
+        )
+        return
     }
 
     Box(
@@ -379,32 +410,6 @@ fun ReportsScreen(
         )
     }
 
-    if (showForm) {
-        ReportFormSheet(
-            userLocation = userLocation,
-            onSubmit = { type, location, description ->
-                val coords = userLocation
-                val finalLocation = location.trim().ifBlank {
-                    coords?.let {
-                        "Ubicación actual (${"%.4f".format(it.latitude)}, ${"%.4f".format(it.longitude)})"
-                    }.orEmpty()
-                }
-                if (type != null && finalLocation.isNotBlank()) {
-                    viewModel.addReport(
-                        type = type,
-                        location = finalLocation,
-                        description = description,
-                        latitude = coords?.latitude,
-                        longitude = coords?.longitude
-                    )
-                    showForm = false
-                } else {
-                    onShowToast("Completa el tipo y la ubicación del reporte")
-                }
-            },
-            onDismiss = { showForm = false }
-        )
-    }
 }
 
 private data class NearbyReport(
@@ -561,6 +566,16 @@ private fun ReportListItem(
                 )
             }
 
+            report.imagePath?.let { imagePath ->
+                AsyncImage(
+                    model = imagePath,
+                    contentDescription = "Foto del reporte",
+                    modifier = Modifier
+                        .size(54.dp)
+                        .clip(RoundedCornerShape(14.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
     }
 }
@@ -587,6 +602,18 @@ private fun ReportDetailSheet(
                 .padding(bottom = 32.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            report.imagePath?.let { imagePath ->
+                AsyncImage(
+                    model = imagePath,
+                    contentDescription = "Foto del reporte",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(220.dp)
+                        .clip(RoundedCornerShape(24.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically

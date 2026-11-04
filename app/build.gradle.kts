@@ -93,4 +93,9 @@ dependencies {
     // Mapa local-first: MapLibre + OpenStreetMap
     // -------------------------------------------------------
     implementation(libs.maplibre.android)
+
+    // -------------------------------------------------------
+    // Orientación EXIF para fotos de reportes
+    // -------------------------------------------------------
+    implementation(libs.androidx.exifinterface)
 }

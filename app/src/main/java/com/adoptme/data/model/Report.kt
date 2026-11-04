@@ -12,7 +12,12 @@ data class Report(
     val timeAgo: String,
     val latitude: Double? = null,
     val longitude: Double? = null,
-    val createdAt: Long = 0L
+    val createdAt: Long = 0L,
+    /**
+     * Ruta local del archivo comprimido. En el backend debe guardarse solo la
+     * clave/URL de object storage, nunca el binario ni base64 en la base de datos.
+     */
+    val imagePath: String? = null
 )
 
 enum class ReportType(val label: String, val emoji: String) {
