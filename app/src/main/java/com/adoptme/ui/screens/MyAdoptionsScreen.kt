@@ -1,3 +1,5 @@
+@file:OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+
 package com.adoptme.ui.screens
 
 import androidx.compose.foundation.background
@@ -12,9 +14,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -110,130 +112,154 @@ fun InterestedDogCard(dog: Dog, onClick: () -> Unit = {}, onRemove: () -> Unit) 
     }
 
     Card(
-        modifier = Modifier.clickable(onClick = onClick),
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(0.72f)
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(26.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = fallbackColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
-        Column {
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (dog.imageUrl != null) {
+                SubcomposeAsyncImage(
+                    model = dog.imageUrl,
+                    contentDescription = "Foto de ${dog.name}",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                    loading = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.surfaceVariant),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                strokeWidth = 2.dp,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(22.dp)
+                            )
+                        }
+                    },
+                    error = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(fallbackColor),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(dog.emoji, fontSize = 40.sp)
+                        }
+                    },
+                    success = { SubcomposeAsyncImageContent() }
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(fallbackColor),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(dog.emoji, fontSize = 44.sp)
+                }
+            }
+
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(132.dp)
-                    .background(fallbackColor),
-                contentAlignment = Alignment.Center
-            ) {
-                if (dog.imageUrl != null) {
-                    SubcomposeAsyncImage(
-                        model = dog.imageUrl,
-                        contentDescription = "Foto de ${dog.name}",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop,
-                        loading = {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(MaterialTheme.colorScheme.surfaceVariant),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator(
-                                    strokeWidth = 2.dp,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(22.dp)
-                                )
-                            }
-                        },
-                        error = {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(fallbackColor),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(dog.emoji, fontSize = 40.sp)
-                            }
-                        },
-                        success = { SubcomposeAsyncImageContent() }
-                    )
-                } else {
-                    Text(dog.emoji, fontSize = 40.sp)
-                }
-
-                if (dog.source == AnimalSource.HUACHITOS) {
-                    Surface(
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .padding(10.dp),
-                        shape = RoundedCornerShape(50),
-                        color = Color.Black.copy(alpha = 0.45f)
-                    ) {
-                        Text(
-                            text = "Huachitos.cl",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colorStops = arrayOf(
+                                0f to Color.Transparent,
+                                0.45f to Color.Transparent,
+                                1f to Color.Black.copy(alpha = 0.86f)
+                            )
                         )
-                    }
-                }
+                    )
+            )
 
+            if (dog.source == AnimalSource.HUACHITOS) {
                 Surface(
                     modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(10.dp)
-                        .size(32.dp),
-                    shape = CircleShape,
-                    color = Color.White.copy(alpha = 0.92f)
+                        .align(Alignment.TopStart)
+                        .padding(9.dp),
+                    shape = RoundedCornerShape(50),
+                    color = Color.Black.copy(alpha = 0.35f)
                 ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = Icons.Filled.Favorite,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier.size(17.dp)
-                        )
-                    }
+                    Text(
+                        text = "Huachitos.cl",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.White,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                    )
+                }
+            }
+
+            Surface(
+                onClick = onRemove,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(9.dp)
+                    .size(32.dp),
+                shape = CircleShape,
+                color = Color.White.copy(alpha = 0.92f)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Filled.Favorite,
+                        contentDescription = "Quitar de intereses",
+                        tint = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.size(17.dp)
+                    )
                 }
             }
 
             Column(
-                modifier = Modifier.padding(13.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(11.dp),
+                verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 Text(
                     text = dog.name,
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = Color.White,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = dog.location.ifBlank { "Ubicación no informada" },
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = Color.White.copy(alpha = 0.85f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                dog.age?.let {
-                    Text(
-                        text = it,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-                TextButton(
-                    onClick = onRemove,
-                    contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
-                    modifier = Modifier.padding(top = 2.dp)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
-                    Text(
-                        text = "Quitar de intereses",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
+                    InterestedTag(dog.species.label)
+                    dog.age?.let { InterestedTag(it) }
+                    dog.gender?.let {
+                        InterestedTag(it.replaceFirstChar { c -> c.uppercase() })
+                    }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun InterestedTag(text: String) {
+    Surface(
+        shape = RoundedCornerShape(50),
+        color = Color.White.copy(alpha = 0.2f)
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall,
+            color = Color.White,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+        )
     }
 }

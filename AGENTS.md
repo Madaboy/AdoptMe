@@ -302,6 +302,7 @@ app/src/test/java/com/adoptme/
 
 - Se guardan localmente y sobreviven al reinicio.
 - La identidad de una mascota es `source + id`.
+- La grilla usa tarjetas con la foto a pantalla completa y los datos en etiquetas.
 - No dupliques intereses.
 - El badge de la barra muestra la cantidad.
 

@@ -31,7 +31,7 @@ Pendiente de infraestructura: Supabase/backend para alertas compartidas, Crashly
 | **Adoptar** | Catálogo real, swipe, foto a pantalla completa con etiquetas y ficha con galería |
 | **Reportes** | Mapa a pantalla completa, alertas con ficha y wizard de reporte en 3 pasos con 1 foto |
 | **Publicar** | Ficha de adopción por pasos: fotos → descripción → confirmación legal, con acabado visual “liquid glass” |
-| **Intereses** | Mascotas guardadas, ficha de detalle, eliminar interés, badge en la barra |
+| **Intereses** | Mascotas guardadas en tarjetas con foto completa y etiquetas, ficha de detalle y badge en la barra |
 | **Mi Cuenta** | Creación de cuenta front-end con iconos SVG, Google demo y casillas Ley 21.719/21.020 |
 | **Más** | Pendiente de la cuenta logeada; funcionalidades futuras con Feature Flags |
 
