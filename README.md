@@ -10,7 +10,8 @@ Fase 0 completada en lo funcional:
 - Navegación Compose con 5 posiciones y acción central de adopción.
 - ViewModel por pantalla y repositorio como interfaz.
 - Persistencia local de intereses, publicaciones propias y reportes.
-- Pantalla de creación de cuenta en la pestaña **Mi Cuenta** (solo front-end; sin persistencia ni login real todavía).
+- Cuenta local con registro e inicio de sesión persistidos en el dispositivo (sin backend todavía).
+- Pantalla **Mi Cuenta** con perfil, estadísticas reales, accesos a publicaciones, intereses, reportes y ajustes.
 - Publicación con foto desde el selector del sistema, sin permisos de almacenamiento.
 - Ficha de detalle en formato carta con galería de todas las fotos de Huachitos y visor a pantalla completa, accesible desde Adoptar e Intereses.
 - Sin datos de ejemplo visibles en producción.
@@ -32,7 +33,7 @@ Pendiente de infraestructura: Supabase/backend para alertas compartidas, Crashly
 | **Reportes** | Mapa a pantalla completa, alertas con ficha y wizard de reporte en 3 pasos con 1 foto |
 | **Publicar** | Ficha de adopción por pasos: fotos → descripción → confirmación legal, con acabado visual “liquid glass” |
 | **Intereses** | Mascotas guardadas en tarjetas con foto completa y etiquetas, ficha de detalle y badge en la barra |
-| **Mi Cuenta** | Creación de cuenta front-end con iconos SVG, Google demo y casillas Ley 21.719/21.020 |
+| **Mi Cuenta** | Perfil con iniciales, estadísticas, accesos a publicaciones, intereses, reportes, ajustes y cierre de sesión |
 | **Más** | Pendiente de la cuenta logeada; funcionalidades futuras con Feature Flags |
 
 El botón central **Adoptar** es un círculo coral con la huella, sin texto. **Publicar** ocupa la primera posición de la barra y abre el formulario a pantalla completa; no usa “+”: publicar una adopción es un acto de cuidado.
@@ -53,6 +54,7 @@ DogRepository (interfaz)
 ```
 
 - **AppContainer** (`core/di`): inyección manual con una única instancia del repositorio.
+- **SessionManager** (`core/session`): cuentas locales con contraseña PBKDF2 y sesión persistida en DataStore.
 - **LocalDataSource**: mantiene el estado inmediato en memoria y lo persiste en DataStore.
 - **PersistedState v1**: intereses, publicaciones propias y reportes.
 - **HtmlText**: limpia el HTML de Huachitos con Jsoup antes de mostrarlo.
@@ -114,7 +116,7 @@ Salida:
 
 - APK: `app/build/outputs/apk/debug/app-debug.apk`
 - Tests: 17 pruebas unitarias
-- Lint: 0 errores
+- Lint: 0 errores, 30 warnings de versiones
 
 ## Tests cubiertos
 
@@ -140,7 +142,8 @@ Salida:
 
 - Las publicaciones, intereses y reportes son locales: no se sincronizan entre dispositivos. El mapa muestra únicamente los reportes de este teléfono.
 - Las fotos se copian al almacenamiento privado del dispositivo y no se suben a la nube.
-- La creación de cuenta es solo front-end: no persiste cuentas, no autentica y aún no existe la pantalla logeada.
+- La cuenta, el inicio de sesión y la sesión son locales: no hay recuperación de cuenta ni autenticación con backend.
+- La pantalla **Mi Cuenta** muestra el perfil y las estadísticas reales del dispositivo; los datos de varias cuentas aún no se separan por completo.
 - Los textos de términos y privacidad son una base de prototipo alineada a las leyes 21.719 y 21.020; requieren revisión legal antes de producción.
 - Las alertas compartidas entre usuarios requieren backend; el mapa local ya funciona con MapLibre/OSM.
 - Las secciones de chat, comunidad, tienda y gamificación están deshabilitadas por Feature Flags.

@@ -24,14 +24,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.adoptme.R
+import com.adoptme.viewmodel.AccountViewModel
+
+private enum class AuthMode { REGISTER, LOGIN }
 
 /**
- * Pantalla de creación de cuenta: solo front-end.
- * Incluye acceso con Google (demo), casillas legales y referencias a la
- * Ley 21.719 (datos personales) y Ley 21.020 (tenencia responsable).
+ * Registro e inicio de sesión local.
+ *
+ * La cuenta se guarda en DataStore con contraseña PBKDF2. No hay backend
+ * todavía: la sesión y las publicaciones viven en este dispositivo.
  */
 @Composable
-fun AuthScreen(onShowToast: (String) -> Unit = {}) {
+fun AuthScreen(
+    viewModel: AccountViewModel,
+    onShowToast: (String) -> Unit = {}
+) {
+    var mode by rememberSaveable { mutableStateOf(AuthMode.REGISTER) }
     var firstName by rememberSaveable { mutableStateOf("") }
     var lastName by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
@@ -43,8 +51,45 @@ fun AuthScreen(onShowToast: (String) -> Unit = {}) {
     var privacyAccepted by rememberSaveable { mutableStateOf(false) }
     var isAdult by rememberSaveable { mutableStateOf(false) }
     var marketingAccepted by rememberSaveable { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
+    var localError by remember { mutableStateOf<String?>(null) }
     var legalDocument by remember { mutableStateOf<LegalDocument?>(null) }
+
+    val authState by viewModel.authState.collectAsState()
+    val isRegister = mode == AuthMode.REGISTER
+    val displayedError = localError ?: authState.error
+
+    fun switchMode() {
+        mode = if (isRegister) AuthMode.LOGIN else AuthMode.REGISTER
+        localError = null
+        viewModel.clearAuthError()
+    }
+
+    fun submit() {
+        val validationError = when {
+            isRegister && (firstName.isBlank() || lastName.isBlank()) ->
+                "Completa tu nombre y apellido."
+            !Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches() ->
+                "Ingresa un correo electrónico válido."
+            password.length < 6 ->
+                "La contraseña debe tener al menos 6 caracteres."
+            isRegister && password != confirmPassword ->
+                "Las contraseñas no coinciden."
+            isRegister && (!termsAccepted || !privacyAccepted) ->
+                "Debes aceptar los Términos y la Política de Privacidad."
+            isRegister && !isAdult ->
+                "Debes declarar que eres mayor de 18 años o tienes autorización."
+            else -> null
+        }
+
+        localError = validationError
+        if (validationError == null) {
+            if (isRegister) {
+                viewModel.register(firstName, lastName, email, password)
+            } else {
+                viewModel.login(email, password)
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -76,14 +121,18 @@ fun AuthScreen(onShowToast: (String) -> Unit = {}) {
             Spacer(Modifier.height(18.dp))
 
             Text(
-                text = "Crea tu cuenta",
+                text = if (isRegister) "Crea tu cuenta" else "Inicia sesión",
                 style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "Crea tu cuenta para asociar tus mascotas y gestionar sus fichas.",
+                text = if (isRegister) {
+                    "Crea tu cuenta para asociar tus mascotas y gestionar sus fichas."
+                } else {
+                    "Entra para gestionar tus publicaciones, intereses y reportes."
+                },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -94,6 +143,7 @@ fun AuthScreen(onShowToast: (String) -> Unit = {}) {
                 onClick = {
                     onShowToast("Continuar con Google estará disponible próximamente.")
                 },
+                enabled = !authState.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -124,7 +174,7 @@ fun AuthScreen(onShowToast: (String) -> Unit = {}) {
                     color = MaterialTheme.colorScheme.outline
                 )
                 Text(
-                    text = "o regístrate con correo",
+                    text = if (isRegister) "o regístrate con correo" else "o entra con correo",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -136,22 +186,25 @@ fun AuthScreen(onShowToast: (String) -> Unit = {}) {
 
             Spacer(Modifier.height(18.dp))
 
-            AuthTextField(
-                value = firstName,
-                onValueChange = { firstName = it },
-                placeholder = "Nombre",
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            )
-            Spacer(Modifier.height(10.dp))
-            AuthTextField(
-                value = lastName,
-                onValueChange = { lastName = it },
-                placeholder = "Apellido",
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            )
-            Spacer(Modifier.height(10.dp))
+            if (isRegister) {
+                AuthTextField(
+                    value = firstName,
+                    onValueChange = { firstName = it },
+                    placeholder = "Nombre",
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                )
+                Spacer(Modifier.height(10.dp))
+                AuthTextField(
+                    value = lastName,
+                    onValueChange = { lastName = it },
+                    placeholder = "Apellido",
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                )
+                Spacer(Modifier.height(10.dp))
+            }
+
             AuthTextField(
                 value = email,
                 onValueChange = { email = it },
@@ -165,7 +218,7 @@ fun AuthScreen(onShowToast: (String) -> Unit = {}) {
                 onValueChange = { password = it },
                 placeholder = "Contraseña",
                 keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Next,
+                imeAction = if (isRegister) ImeAction.Next else ImeAction.Done,
                 visualTransformation = if (passwordVisible) {
                     VisualTransformation.None
                 } else {
@@ -178,54 +231,57 @@ fun AuthScreen(onShowToast: (String) -> Unit = {}) {
                     )
                 }
             )
-            Spacer(Modifier.height(10.dp))
-            AuthTextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
-                placeholder = "Confirmar contraseña",
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done,
-                visualTransformation = if (confirmVisible) {
-                    VisualTransformation.None
-                } else {
-                    PasswordVisualTransformation()
-                },
-                trailingIcon = {
-                    PasswordVisibilityButton(
-                        visible = confirmVisible,
-                        onToggle = { confirmVisible = !confirmVisible }
-                    )
-                }
-            )
 
-            Spacer(Modifier.height(18.dp))
+            if (isRegister) {
+                Spacer(Modifier.height(10.dp))
+                AuthTextField(
+                    value = confirmPassword,
+                    onValueChange = { confirmPassword = it },
+                    placeholder = "Confirmar contraseña",
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done,
+                    visualTransformation = if (confirmVisible) {
+                        VisualTransformation.None
+                    } else {
+                        PasswordVisualTransformation()
+                    },
+                    trailingIcon = {
+                        PasswordVisibilityButton(
+                            visible = confirmVisible,
+                            onToggle = { confirmVisible = !confirmVisible }
+                        )
+                    }
+                )
 
-            LegalCheckRow(
-                checked = termsAccepted,
-                onCheckedChange = { termsAccepted = it },
-                label = "Acepto los Términos y Condiciones",
-                linkLabel = "Ver términos",
-                onLinkClick = { legalDocument = LegalDocument.TERMS }
-            )
-            LegalCheckRow(
-                checked = privacyAccepted,
-                onCheckedChange = { privacyAccepted = it },
-                label = "Acepto la Política de Privacidad",
-                linkLabel = "Ver privacidad",
-                onLinkClick = { legalDocument = LegalDocument.PRIVACY }
-            )
-            LegalCheckRow(
-                checked = isAdult,
-                onCheckedChange = { isAdult = it },
-                label = "Declaro ser mayor de 18 años o contar con autorización de mi tutor legal."
-            )
-            LegalCheckRow(
-                checked = marketingAccepted,
-                onCheckedChange = { marketingAccepted = it },
-                label = "Acepto recibir comunicaciones sobre adopciones y novedades (opcional)."
-            )
+                Spacer(Modifier.height(18.dp))
 
-            errorMessage?.let { error ->
+                LegalCheckRow(
+                    checked = termsAccepted,
+                    onCheckedChange = { termsAccepted = it },
+                    label = "Acepto los Términos y Condiciones",
+                    linkLabel = "Ver términos",
+                    onLinkClick = { legalDocument = LegalDocument.TERMS }
+                )
+                LegalCheckRow(
+                    checked = privacyAccepted,
+                    onCheckedChange = { privacyAccepted = it },
+                    label = "Acepto la Política de Privacidad",
+                    linkLabel = "Ver privacidad",
+                    onLinkClick = { legalDocument = LegalDocument.PRIVACY }
+                )
+                LegalCheckRow(
+                    checked = isAdult,
+                    onCheckedChange = { isAdult = it },
+                    label = "Declaro ser mayor de 18 años o contar con autorización de mi tutor legal."
+                )
+                LegalCheckRow(
+                    checked = marketingAccepted,
+                    onCheckedChange = { marketingAccepted = it },
+                    label = "Acepto recibir comunicaciones sobre adopciones y novedades (opcional)."
+                )
+            }
+
+            displayedError?.let { error ->
                 Spacer(Modifier.height(12.dp))
                 Text(
                     text = error,
@@ -238,26 +294,8 @@ fun AuthScreen(onShowToast: (String) -> Unit = {}) {
             Spacer(Modifier.height(18.dp))
 
             Button(
-                onClick = {
-                    errorMessage = when {
-                        firstName.isBlank() || lastName.isBlank() ->
-                            "Completa tu nombre y apellido."
-                        !Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches() ->
-                            "Ingresa un correo electrónico válido."
-                        password.length < 6 ->
-                            "La contraseña debe tener al menos 6 caracteres."
-                        password != confirmPassword ->
-                            "Las contraseñas no coinciden."
-                        !termsAccepted || !privacyAccepted ->
-                            "Debes aceptar los Términos y la Política de Privacidad."
-                        !isAdult ->
-                            "Debes declarar que eres mayor de 18 años o tienes autorización."
-                        else -> null
-                    }
-                    if (errorMessage == null) {
-                        onShowToast("Formulario de cuenta completo. El registro estará disponible próximamente.")
-                    }
-                },
+                onClick = { submit() },
+                enabled = !authState.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -267,16 +305,30 @@ fun AuthScreen(onShowToast: (String) -> Unit = {}) {
                     contentColor = MaterialTheme.colorScheme.inverseOnSurface
                 )
             ) {
-                Text(
-                    text = "Crear cuenta",
-                    style = MaterialTheme.typography.titleMedium
-                )
+                if (authState.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.inverseOnSurface
+                    )
+                    Spacer(Modifier.width(10.dp))
+                    Text("Procesando…", style = MaterialTheme.typography.titleMedium)
+                } else {
+                    Text(
+                        text = if (isRegister) "Crear cuenta" else "Iniciar sesión",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
             }
 
             Spacer(Modifier.height(14.dp))
             Text(
-                text = "Tus datos se usan para crear tu cuenta y gestionar adopciones. " +
-                    "Puedes ejercer tus derechos de acceso, rectificación, cancelación y oposición.",
+                text = if (isRegister) {
+                    "Tus datos se usan para crear tu cuenta y gestionar adopciones. " +
+                        "Puedes ejercer tus derechos de acceso, rectificación, cancelación y oposición."
+                } else {
+                    "Tu cuenta se guarda solo en este dispositivo. Aún no hay sincronización con la nube."
+                },
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -289,19 +341,17 @@ fun AuthScreen(onShowToast: (String) -> Unit = {}) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "¿Ya tienes cuenta? ",
+                    text = if (isRegister) "¿Ya tienes cuenta? " else "¿No tienes cuenta? ",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Inicia sesión",
+                    text = if (isRegister) "Inicia sesión" else "Crea una",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold,
                     textDecoration = TextDecoration.Underline,
-                    modifier = Modifier.clickable {
-                        onShowToast("Inicio de sesión estará disponible próximamente.")
-                    }
+                    modifier = Modifier.clickable { switchMode() }
                 )
             }
         }

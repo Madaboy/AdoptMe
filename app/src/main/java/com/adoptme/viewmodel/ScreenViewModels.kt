@@ -3,6 +3,8 @@ package com.adoptme.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adoptme.core.di.AppContainer
+import com.adoptme.core.session.SessionManager
+import com.adoptme.core.session.UserSession
 import com.adoptme.data.model.AnimalSpecies
 import com.adoptme.data.model.AnimalSource
 import com.adoptme.data.model.Dog
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -261,4 +264,104 @@ class MyPetViewModel(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = emptyList()
     )
+}
+
+sealed interface AccountSessionState {
+    data object Loading : AccountSessionState
+    data object LoggedOut : AccountSessionState
+    data class LoggedIn(val session: UserSession) : AccountSessionState
+}
+
+data class AuthUiState(
+    val isLoading: Boolean = false,
+    val error: String? = null
+)
+
+/**
+ * Estado de la cuenta local: sesión persistida, estadísticas del perfil y
+ * registro/inicio de sesión sin backend.
+ */
+class AccountViewModel(
+    private val sessionManager: SessionManager = AppContainer.sessionManager,
+    private val repository: DogRepository = AppContainer.repository
+) : ViewModel() {
+
+    val sessionState: StateFlow<AccountSessionState> = sessionManager.userSessionFlow
+        .map { session ->
+            if (session.userId == null) {
+                AccountSessionState.LoggedOut
+            } else {
+                AccountSessionState.LoggedIn(session)
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = AccountSessionState.Loading
+        )
+
+    val myPets: StateFlow<List<Dog>> = combine(
+        repository.myPets,
+        sessionManager.userSessionFlow
+    ) { pets, session ->
+        val ownerId = session.userId
+        if (ownerId == null) {
+            emptyList()
+        } else {
+            pets.filter { it.ownerId == null || it.ownerId == ownerId }
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = emptyList()
+    )
+
+    val interestedDogs: StateFlow<List<Dog>> = repository.interestedDogs
+    val reports: StateFlow<List<Report>> = repository.reports
+
+    private val _authState = MutableStateFlow(AuthUiState())
+    val authState: StateFlow<AuthUiState> = _authState.asStateFlow()
+
+    fun register(
+        firstName: String,
+        lastName: String,
+        email: String,
+        password: String
+    ) {
+        if (_authState.value.isLoading) return
+        _authState.value = AuthUiState(isLoading = true)
+        viewModelScope.launch {
+            val result = sessionManager.register(firstName, lastName, email, password)
+            if (result.success) {
+                sessionManager.markOnboardingCompleted()
+                _authState.value = AuthUiState()
+            } else {
+                _authState.value = AuthUiState(error = result.message)
+            }
+        }
+    }
+
+    fun login(email: String, password: String) {
+        if (_authState.value.isLoading) return
+        _authState.value = AuthUiState(isLoading = true)
+        viewModelScope.launch {
+            val result = sessionManager.login(email, password)
+            _authState.value = if (result.success) {
+                AuthUiState()
+            } else {
+                AuthUiState(error = result.message)
+            }
+        }
+    }
+
+    fun clearAuthError() {
+        _authState.value = _authState.value.copy(error = null)
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            sessionManager.clearSession()
+            _authState.value = AuthUiState()
+        }
+    }
 }

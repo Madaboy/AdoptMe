@@ -6,12 +6,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.adoptme.ui.screens.AuthScreen
+import com.adoptme.ui.screens.AccountScreen
 import com.adoptme.ui.screens.HomeScreen
 import com.adoptme.ui.screens.MoreHubScreen
 import com.adoptme.ui.screens.MyAdoptionsScreen
 import com.adoptme.ui.screens.PublishScreen
 import com.adoptme.ui.screens.ReportsScreen
+import com.adoptme.viewmodel.AccountViewModel
 import com.adoptme.viewmodel.HomeViewModel
 import com.adoptme.viewmodel.MyAdoptionsViewModel
 import com.adoptme.viewmodel.PublishViewModel
@@ -57,7 +58,21 @@ fun AdoptMeNavHost(
             )
         }
         composable(Screen.Account.route) {
-            AuthScreen(onShowToast = onShowToast)
+            val accountViewModel: AccountViewModel = viewModel()
+            AccountScreen(
+                viewModel = accountViewModel,
+                onNavigate = { screen ->
+                    navController.navigate(screen.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onPublish = {
+                    navController.navigate(Screen.Publish.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onShowToast = onShowToast
+            )
         }
         composable(Screen.Publish.route) {
             val publishViewModel: PublishViewModel = viewModel()

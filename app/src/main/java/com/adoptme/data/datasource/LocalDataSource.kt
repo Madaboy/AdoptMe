@@ -29,8 +29,6 @@ class LocalDataSource(
     // CONFLATED: si hay varios cambios seguidos, solo importa el último estado.
     private val persistChannel = Channel<PersistedState>(Channel.CONFLATED)
 
-    private val restoreJob = scope.launch { restore() }
-
     init {
         scope.launch {
             for (state in persistChannel) {
@@ -51,6 +49,9 @@ class LocalDataSource(
 
     private val _reports = MutableStateFlow<List<Report>>(emptyList())
     val reportsFlow: StateFlow<List<Report>> = _reports.asStateFlow()
+
+    // Debe iniciarse después de los StateFlows: restore() toma un snapshot de ellos.
+    private val restoreJob = scope.launch { restore() }
 
     /**
      * Espera a que termine la restauración inicial.

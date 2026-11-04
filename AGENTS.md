@@ -49,9 +49,9 @@ Principio central: **ningún dato simulado**. Si una fuente no entrega un dato,
 el campo queda en `null` y la UI muestra “No informado” o lo omite. Nunca se
 rellenan valores para “completar” una ficha.
 
-Alcance actual: MVP Android local. La pestaña **Mi Cuenta** muestra solo el
-front-end de creación de cuenta; no hay registro/logeo real, backend,
-sincronización entre dispositivos, alertas compartidas ni push.
+Alcance actual: MVP Android local. La pestaña **Mi Cuenta** permite crear una
+cuenta local, iniciar sesión y ver el perfil con estadísticas del dispositivo;
+no hay backend, sincronización entre dispositivos, alertas compartidas ni push.
 El mapa local de reportes ya usa MapLibre + OpenStreetMap.
 
 ---
@@ -64,10 +64,10 @@ El mapa local de reportes ya usa MapLibre + OpenStreetMap.
   tarjeta a pantalla completa con etiquetas superpuestas.
 - Navegación Compose con 4 destinos inferiores y una acción central de
   adopción.
-- Pantalla de creación de cuenta en **Mi Cuenta**, solo front-end: iconos y
-  logotipo SVG, Google demo, casillas de términos/privacidad/mayoría de edad y
-  enlace de login, sin persistencia ni autenticación. Textos base alineados a
-  Ley 21.719 y 21.020.
+- Pantalla **Mi Cuenta** con registro e inicio de sesión local persistidos en
+  DataStore (contraseña PBKDF2), perfil con iniciales, estadísticas reales,
+  accesos a publicaciones/intereses/reportes/ajustes y cierre de sesión.
+  Textos base alineados a Ley 21.719 y 21.020.
 - Publicación de mascota por pasos (fotos → descripción → confirmación legal)
   con selección múltiple de fotos desde el Photo Picker del sistema.
 - Ficha de detalle completa en `ModalBottomSheet`.
@@ -95,8 +95,8 @@ El mapa local de reportes ya usa MapLibre + OpenStreetMap.
 
 - `./gradlew assembleDebug testDebugUnitTest lintDebug` → **BUILD SUCCESSFUL**
 - **17 tests unitarios** pasando.
-- Lint: **0 errores, 27 warnings** (principalmente versiones de dependencias).
-- APK debug: `app/build/outputs/apk/debug/app-debug.apk` (~12 MB).
+- Lint: **0 errores, 30 warnings** (principalmente versiones de dependencias).
+- APK debug: `app/build/outputs/apk/debug/app-debug.apk` (~54 MB).
 - CI: `.github/workflows/android.yml`.
 
 Antes de confiar en estos números, vuelve a ejecutar los comandos: el estado
@@ -193,8 +193,11 @@ DogRepository (interfaz)
 - **Repositorio como interfaz:** `DogRepository` permite testear y, en el
   futuro, cambiar la implementación local por Supabase sin tocar pantallas.
 - **ViewModels:** `HomeViewModel`, `PublishViewModel`, `MyAdoptionsViewModel`,
-  `ReportsViewModel`, `MyPetViewModel` viven en
+  `ReportsViewModel`, `MyPetViewModel` y `AccountViewModel` viven en
   `viewmodel/ScreenViewModels.kt`.
+- **Sesión:** `SessionManager` guarda cuentas locales y la sesión activa en
+  DataStore; `AccountViewModel` expone el estado de sesión, estadísticas y
+  operaciones de registro/login/logout.
 - **Estado:** los ViewModels exponen `StateFlow`; las pantallas recolectan con
   `collectAsState()`.
 - **Persistencia:** `LocalDataSource` mantiene el estado en memoria y lo
@@ -236,7 +239,7 @@ app/src/main/java/com/adoptme/
 │   ├── flags/FeatureFlags.kt      # Funciones futuras deshabilitadas
 │   ├── media/PetImageStore.kt     # Copia de fotos al almacenamiento interno
 │   ├── navigation/                # Destinations + NavHost
-│   └── session/SessionManager.kt  # Sesión local preparada; aún no usada por la UI
+│   └── session/SessionManager.kt  # Cuentas locales y sesión persistida
 ├── data/
 │   ├── api/HuachitosApiService.kt
 │   ├── datasource/LocalDataSource.kt
@@ -248,7 +251,7 @@ app/src/main/java/com/adoptme/
 │   └── repository/GalleryParser.kt
 ├── ui/
 │   ├── components/                # Barra inferior, chips, formularios, toasts
-│   ├── screens/                   # Home, Publish, Reports, Interests, MyPet, More
+│   ├── screens/                   # Home, Publish, Reports, Interests, Account, MyPet, More
 │   └── theme/Theme.kt             # Paleta Coral & Crema + Poppins
 └── viewmodel/ScreenViewModels.kt
 ```
@@ -410,20 +413,19 @@ No subas tokens, contraseñas, keystores ni `local.properties`.
 ## 13. Limitaciones y deuda técnica conocida
 
 - Todo es local: no hay sincronización entre dispositivos.
-- La pantalla de cuenta es solo front-end: no guarda cuentas, no autentica y la
-  pantalla logeada todavía no existe. `SessionManager` queda preparado para el
-  futuro, pero la UI actual no lo usa.
+- La cuenta y la sesión son locales: no hay recuperación de cuenta ni
+  autenticación con backend. `SessionManager` guarda las cuentas con PBKDF2,
+  pero aún no hay separación completa de datos entre múltiples cuentas.
 - Las fotos no se comprimen ni se corrigen según EXIF; se copian tal cual.
 - El formulario de publicación es por pasos; el texto usa `rememberSaveable`,
   pero las fotos seleccionadas no se conservan al rotar el dispositivo.
 - No hay indicador de carga mientras DataStore restaura el estado local.
-- La sección Mi Mascota y “Más” quedan ocultas hasta implementar la cuenta logeada.
 - No se pueden editar ni cerrar publicaciones propias.
 - Los reportes son locales: el mapa solo muestra los de este dispositivo y no
-  tienen foto ni sincronización.
+  tienen sincronización.
 - El detalle no tiene contacto directo ni reporte de ficha.
 - No hay pruebas instrumentadas/UI.
-- Lint tiene 27 warnings de versiones; no son errores.
+- Lint tiene 30 warnings de versiones; no son errores.
 
 Estas son oportunidades, no excusas para inventar datos o romper el MVP.
 
