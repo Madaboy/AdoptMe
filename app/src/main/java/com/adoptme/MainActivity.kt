@@ -61,9 +61,11 @@ fun AdoptMeMain(startRoute: String = Screen.Adopt.route) {
                             }
                         } else if (currentRoute != screen.route) {
                             navController.navigate(screen.route) {
-                                popUpTo(Screen.Adopt.route) { saveState = true }
+                                // No guardamos/restauramos el estado de la pestaña:
+                                // al volver a Mi Cuenta debe recrearse la pantalla y
+                                // leer la sesión actual, no restaurar una vista vieja.
+                                popUpTo(Screen.Adopt.route) { inclusive = false }
                                 launchSingleTop = true
-                                restoreState = true
                             }
                         }
                     }
