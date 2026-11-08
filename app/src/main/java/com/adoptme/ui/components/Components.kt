@@ -10,12 +10,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
@@ -362,36 +365,71 @@ fun ActionButtons(
     onLike: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val matchShape = RoundedCornerShape(20.dp)
+
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 10.dp),
-        horizontalArrangement = Arrangement.Center,
+            .padding(horizontal = 18.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CircleActionButton(
-            emoji = "✕",
-            size = 60,
-            containerColor = MaterialTheme.colorScheme.surface,
-            borderColor = MaterialTheme.colorScheme.outline,
-            onClick = onPass
-        )
-
-        Spacer(Modifier.width(30.dp))
-
         Surface(
-            onClick = onLike,
-            shape = CircleShape,
-            color = CoralAccent,
-            shadowElevation = 10.dp,
-            modifier = Modifier.size(76.dp)
+            onClick = onPass,
+            modifier = Modifier.size(width = 60.dp, height = 64.dp),
+            shape = RoundedCornerShape(20.dp),
+            color = Color.Black.copy(alpha = 0.30f),
+            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.22f)),
+            shadowElevation = 2.dp
         ) {
             Box(contentAlignment = Alignment.Center) {
+                Surface(
+                    shape = CircleShape,
+                    color = Color.White,
+                    modifier = Modifier.size(30.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Descartar mascota",
+                            tint = Color(0xFF1E1B1A),
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .height(64.dp)
+                .shadow(8.dp, matchShape)
+                .clip(matchShape)
+                .background(
+                    Brush.horizontalGradient(
+                        listOf(CoralAccent, Color(0xFFE8897F))
+                    )
+                )
+                .clickable(onClick = onLike),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
                 Icon(
                     imageVector = Icons.Filled.Favorite,
-                    contentDescription = "Me interesa adoptar",
+                    contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(24.dp)
+                )
+                Text(
+                    text = "MATCH",
+                    color = Color.White,
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.2.sp
                 )
             }
         }

@@ -30,7 +30,7 @@ Pendiente de infraestructura: Supabase/backend para alertas compartidas, Crashly
 
 | Sección | Estado |
 | :--- | :--- |
-| **Adoptar** | Catálogo real, swipe con tutorial inicial, foto a pantalla completa con etiquetas y ficha con galería |
+| **Adoptar** | Catálogo real, swipe con tutorial inicial, botones X/MATCH, foto a pantalla completa con etiquetas y ficha con galería |
 | **Reportes** | Mapa a pantalla completa, alertas con ficha y wizard de reporte en 3 pasos con 1 foto |
 | **Publicar** | Ficha de adopción por pasos: fotos → descripción → confirmación legal, con acabado visual “liquid glass” |
 | **Intereses** | Mascotas guardadas en tarjetas con foto completa y etiquetas, ficha de detalle y badge en la barra |

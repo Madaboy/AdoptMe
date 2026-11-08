@@ -293,6 +293,8 @@ app/src/test/java/com/adoptme/
 - “Más” queda pendiente de la cuenta logeada; no ocupa una posición en la barra.
 - No cambies la navegación a una barra de 5 pestañas.
 - No uses “+” para publicar: el icono es casa + corazón.
+- En la tarjeta de adopción, las acciones son un botón oscuro con **X** para
+  descartar y un botón ancho **MATCH** con corazón para guardar interés.
 
 ### Ficha de detalle
 
