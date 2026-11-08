@@ -447,57 +447,72 @@ private fun PhotoStep(
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
+        Spacer(Modifier.height(4.dp))
         Text(
             text = "Sube fotos de tu mascota",
             style = MaterialTheme.typography.titleLarge,
-            color = Color(0xFF1E1B1A)
+            color = Color(0xFF1E1B1A),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
         )
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(6.dp))
         Text(
             text = "Las fotos reales ayudan a encontrar un hogar más rápido.",
             style = MaterialTheme.typography.bodySmall,
-            color = Color(0xFF6F6864)
+            color = Color(0xFF6F6864),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(18.dp))
 
         if (photos.isEmpty()) {
-            GlassCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-                    .clickable(onClick = onAdd)
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                GlassCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .clickable(onClick = onAdd)
                 ) {
-                    Surface(
-                        shape = CircleShape,
-                        color = CoralPrimary,
-                        modifier = Modifier.size(72.dp)
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(32.dp)
-                            )
+                        Surface(
+                            shape = CircleShape,
+                            color = CoralPrimary,
+                            modifier = Modifier.size(72.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(32.dp)
+                                )
+                            }
                         }
+                        Spacer(Modifier.height(14.dp))
+                        Text(
+                            text = "Agregar fotos",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color(0xFF1E1B1A),
+                            textAlign = TextAlign.Center
+                        )
+                        Text(
+                            text = "JPG, PNG o WEBP · hasta 6 fotos",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color(0xFF6F6864),
+                            textAlign = TextAlign.Center
+                        )
                     }
-                    Spacer(Modifier.height(14.dp))
-                    Text(
-                        text = "Agregar fotos",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color(0xFF1E1B1A)
-                    )
-                    Text(
-                        text = "JPG, PNG o WEBP · hasta 6 fotos",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color(0xFF6F6864)
-                    )
                 }
+
+                Spacer(Modifier.height(14.dp))
+                PhotoTipsCard()
             }
         } else {
             LazyVerticalGrid(
@@ -531,6 +546,57 @@ private fun PhotoStep(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun PhotoTipsCard() {
+    GlassCard(
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        Text(
+            text = "Para una foto que enamore",
+            style = MaterialTheme.typography.titleSmall,
+            color = Color(0xFF1E1B1A),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            PhotoTip("☀️", "Buena luz", Modifier.weight(1f))
+            PhotoTip("🐾", "Rostro visible", Modifier.weight(1f))
+            PhotoTip("📷", "Sin filtros", Modifier.weight(1f))
+        }
+    }
+}
+
+@Composable
+private fun PhotoTip(
+    emoji: String,
+    label: String,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(18.dp),
+        color = Color.White.copy(alpha = 0.55f)
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(3.dp)
+        ) {
+            Text(text = emoji, fontSize = 22.sp)
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = Color(0xFF6F6864),
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

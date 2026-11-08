@@ -14,6 +14,7 @@ Fase 0 completada en lo funcional:
 - Pantalla **Mi Cuenta** con perfil, estadísticas reales, accesos a publicaciones, intereses, reportes y ajustes.
 - Publicación con foto desde el selector del sistema, sin permisos de almacenamiento.
 - Ficha de detalle en formato carta con galería de todas las fotos de Huachitos y visor a pantalla completa, accesible desde Adoptar e Intereses.
+- Tutorial de swipe la primera vez que se abre la app: izquierda para descartar, derecha para guardar interés.
 - Sin datos de ejemplo visibles en producción.
 - Tests unitarios, lint sin errores y CI de GitHub Actions.
 
@@ -29,7 +30,7 @@ Pendiente de infraestructura: Supabase/backend para alertas compartidas, Crashly
 
 | Sección | Estado |
 | :--- | :--- |
-| **Adoptar** | Catálogo real, swipe, foto a pantalla completa con etiquetas y ficha con galería |
+| **Adoptar** | Catálogo real, swipe con tutorial inicial, foto a pantalla completa con etiquetas y ficha con galería |
 | **Reportes** | Mapa a pantalla completa, alertas con ficha y wizard de reporte en 3 pasos con 1 foto |
 | **Publicar** | Ficha de adopción por pasos: fotos → descripción → confirmación legal, con acabado visual “liquid glass” |
 | **Intereses** | Mascotas guardadas en tarjetas con foto completa y etiquetas, ficha de detalle y badge en la barra |
@@ -55,6 +56,7 @@ DogRepository (interfaz)
 
 - **AppContainer** (`core/di`): inyección manual con una única instancia del repositorio.
 - **SessionManager** (`core/session`): cuentas locales con contraseña PBKDF2 y sesión persistida en DataStore.
+- **TutorialStore** (`core/tutorial`): recuerda si el tutorial de swipe ya fue visto.
 - **LocalDataSource**: mantiene el estado inmediato en memoria y lo persiste en DataStore.
 - **PersistedState v1**: intereses, publicaciones propias y reportes.
 - **HtmlText**: limpia el HTML de Huachitos con Jsoup antes de mostrarlo.

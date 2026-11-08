@@ -62,6 +62,8 @@ El mapa local de reportes ya usa MapLibre + OpenStreetMap.
 
 - Catálogo real de Huachitos.cl con paginación, fotos y descripciones en una
   tarjeta a pantalla completa con etiquetas superpuestas.
+- Tutorial de swipe la primera vez: izquierda para descartar, derecha para
+  guardar en intereses; se recuerda en DataStore.
 - Navegación Compose con 4 destinos inferiores y una acción central de
   adopción.
 - Pantalla **Mi Cuenta** con registro e inicio de sesión local persistidos en
@@ -238,6 +240,7 @@ app/src/main/java/com/adoptme/
 │   ├── di/AppContainer.kt         # DI manual
 │   ├── flags/FeatureFlags.kt      # Funciones futuras deshabilitadas
 │   ├── media/PetImageStore.kt     # Copia de fotos al almacenamiento interno
+│   ├── tutorial/TutorialStore.kt  # Tutorial de swipe visto una sola vez
 │   ├── navigation/                # Destinations + NavHost
 │   └── session/SessionManager.kt  # Cuentas locales y sesión persistida
 ├── data/

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.adoptme.core.di.AppContainer
 import com.adoptme.core.session.SessionManager
 import com.adoptme.core.session.UserSession
+import com.adoptme.core.tutorial.TutorialStore
 import com.adoptme.data.model.AnimalSpecies
 import com.adoptme.data.model.AnimalSource
 import com.adoptme.data.model.Dog
@@ -16,12 +17,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val repository: DogRepository = AppContainer.repository
+    private val repository: DogRepository = AppContainer.repository,
+    private val tutorialStore: TutorialStore = AppContainer.tutorialStore
 ) : ViewModel() {
 
     private val _dogs = MutableStateFlow<List<Dog>>(emptyList())
@@ -41,8 +44,17 @@ class HomeViewModel(
     private val _toastMessage = MutableStateFlow<String?>(null)
     val toastMessage: StateFlow<String?> = _toastMessage.asStateFlow()
 
+    private val _showSwipeTutorial = MutableStateFlow(false)
+    val showSwipeTutorial: StateFlow<Boolean> = _showSwipeTutorial.asStateFlow()
+
     init {
         loadDogs()
+        viewModelScope.launch {
+            val seen = runCatching {
+                tutorialStore.hasSeenSwipeTutorial.first()
+            }.getOrDefault(true)
+            _showSwipeTutorial.value = !seen
+        }
     }
 
     fun loadDogs() {
@@ -98,6 +110,13 @@ class HomeViewModel(
 
     fun clearToast() {
         _toastMessage.value = null
+    }
+
+    fun dismissSwipeTutorial() {
+        _showSwipeTutorial.value = false
+        viewModelScope.launch {
+            runCatching { tutorialStore.markSwipeTutorialSeen() }
+        }
     }
 
     fun getCurrentDog(): Dog? = _dogs.value.getOrNull(_currentIndex.value)
