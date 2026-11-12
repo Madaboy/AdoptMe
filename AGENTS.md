@@ -6,12 +6,13 @@
 >
 > **Rama principal:** `main`
 >
-> **Copia local de referencia:** `/home/madaboy/Projects/AdoptMe/AdoptMe`
+> **Copia local de referencia:** `/home/madaboy/AndroidStudioProjects/AdoptMe`
 >
-> **Última actualización de este documento:** 2026-11-02
+> **Última actualización de este documento:** 2026-11-12
 
 Este archivo es el contexto que debe leer cualquier agente de OpenCode antes de
-trabajar en el proyecto. Si algo no está claro, revisa también `README.md`,
+trabajar en el proyecto. Para el resumen ejecutivo y los últimos cambios, lee
+también `docs/CONTEXT_ACTUAL.md`. Si algo no está claro, revisa `README.md`,
 `Informcion/AdoptMe_Especificacion_Tecnica.md` y el historial de Git.
 
 ---
@@ -263,9 +264,11 @@ Tests:
 
 ```text
 app/src/test/java/com/adoptme/
+├── core/location/LocationProviderTest.kt
 ├── data/datasource/LocalDataSourcePersistenceTest.kt
 ├── data/model/HuachitosMapperTest.kt
-└── data/repository/DogRepositoryTest.kt
+├── data/repository/DogRepositoryTest.kt
+└── data/repository/GalleryParserTest.kt
 ```
 
 ---
@@ -421,7 +424,8 @@ No subas tokens, contraseñas, keystores ni `local.properties`.
 - La cuenta y la sesión son locales: no hay recuperación de cuenta ni
   autenticación con backend. `SessionManager` guarda las cuentas con PBKDF2,
   pero aún no hay separación completa de datos entre múltiples cuentas.
-- Las fotos no se comprimen ni se corrigen según EXIF; se copian tal cual.
+- Las fotos de reportes se comprimen y corrige EXIF con `ReportImageStore`; las
+  fotos de publicaciones todavía se copian tal cual con `PetImageStore`.
 - El formulario de publicación es por pasos; el texto usa `rememberSaveable`,
   pero las fotos seleccionadas no se conservan al rotar el dispositivo.
 - No hay indicador de carga mientras DataStore restaura el estado local.
@@ -443,7 +447,7 @@ Estas son oportunidades, no excusas para inventar datos o romper el MVP.
 1. Compartir ficha con el share sheet de Android.
 2. Indicador de carga mientras se restaura DataStore.
 3. Guardar el borrador de publicación con `rememberSaveable` o persistencia.
-4. Comprimir y rotar fotos antes de copiarlas.
+4. Comprimir y rotar las fotos de publicaciones (las de reportes ya se optimizan).
 5. Editar/cerrar publicaciones propias.
 6. Reportar una ficha desde el detalle.
 7. Accesibilidad y pruebas de UI.

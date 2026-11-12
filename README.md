@@ -12,7 +12,7 @@ Fase 0 completada en lo funcional:
 - Persistencia local de intereses, publicaciones propias y reportes.
 - Cuenta local con registro e inicio de sesión persistidos en el dispositivo (sin backend todavía).
 - Pantalla **Mi Cuenta** con perfil, estadísticas reales, accesos a publicaciones, intereses, reportes y ajustes.
-- Publicación con foto desde el selector del sistema, sin permisos de almacenamiento.
+- Publicación por pasos con hasta 6 fotos desde el selector del sistema, sin permisos de almacenamiento.
 - Ficha de detalle en formato carta con galería de todas las fotos de Huachitos y visor a pantalla completa, accesible desde Adoptar e Intereses.
 - Tutorial de swipe la primera vez que se abre la app: izquierda para descartar, derecha para guardar interés.
 - Sin datos de ejemplo visibles en producción.
@@ -24,6 +24,7 @@ Pendiente de infraestructura: Supabase/backend para alertas compartidas, Crashly
 
 - Repositorio privado: [github.com/Madaboy/AdoptMe](https://github.com/Madaboy/AdoptMe)
 - Contexto completo para agentes: [AGENTS.md](AGENTS.md)
+- Contexto actualizado del producto y últimos cambios: [docs/CONTEXT_ACTUAL.md](docs/CONTEXT_ACTUAL.md)
 - Prompt de arranque para una sesión nueva: [docs/PROMPT_AGENTE.md](docs/PROMPT_AGENTE.md)
 
 ## Funcionalidades
@@ -74,7 +75,10 @@ app/src/main/java/com/adoptme/
 ├── core/
 │   ├── common/HtmlText.kt
 │   ├── di/AppContainer.kt
-│   ├── media/PetImageStore.kt       # Copia de fotos al almacenamiento interno
+│   ├── media/PetImageStore.kt       # Copia de fotos de publicaciones
+│   ├── media/ReportImageStore.kt    # WebP optimizado para reportes
+│   ├── session/SessionManager.kt    # Cuentas locales PBKDF2
+│   ├── tutorial/TutorialStore.kt    # Tutorial de swipe
 │   └── navigation/                # Rutas + NavHost
 ├── data/
 │   ├── api/                       # Retrofit
