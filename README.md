@@ -22,10 +22,9 @@ Pendiente de infraestructura: Supabase/backend para alertas compartidas, Crashly
 
 ## Repositorio y colaboración
 
-- Repositorio privado: [github.com/Madaboy/AdoptMe](https://github.com/Madaboy/AdoptMe)
-- Contexto completo para agentes: [AGENTS.md](AGENTS.md)
+- Repositorio público: [github.com/Madaboy/AdoptMe](https://github.com/Madaboy/AdoptMe)
+- Guía de desarrollo: [docs/GUIA_DESARROLLO.md](docs/GUIA_DESARROLLO.md)
 - Contexto actualizado del producto y últimos cambios: [docs/CONTEXT_ACTUAL.md](docs/CONTEXT_ACTUAL.md)
-- Prompt de arranque para una sesión nueva: [docs/PROMPT_AGENTE.md](docs/PROMPT_AGENTE.md)
 
 ## Funcionalidades
 
@@ -62,7 +61,7 @@ DogRepository (interfaz)
 - **PersistedState v1**: intereses, publicaciones propias y reportes.
 - **HtmlText**: limpia el HTML de Huachitos con Jsoup antes de mostrarlo.
 - **PetImageStore**: copia la foto elegida a `filesDir/pet_images` y guarda un URI `file://` en la publicación.
-- **ReportImageStore**: comprime la foto del reporte a WebP (máx. 1280 px y ~600 KB) en `filesDir/report_images`. En la base de datos se guardará solo la clave/URL de object storage, nunca el binario ni base64.
+- **ReportImageStore**: comprime la foto del reporte a WebP (máx. 1280 px y ~600 KB) en `filesDir/report_images`. En la base de datos se guardará solo la clave/URL de almacenamiento de objetos, nunca el binario ni base64.
 - **DogDetailSheet**: ficha completa en `ModalBottomSheet`, sin ruta de navegación adicional.
 - **Regla de datos**: los campos ausentes quedan en `null`; la UI los omite o muestra “No informado”.
 

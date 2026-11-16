@@ -29,9 +29,6 @@ import androidx.compose.ui.unit.sp
 import com.adoptme.ui.theme.CoralAccent
 import kotlinx.coroutines.delay
 
-// -------------------------------------------------------------------------
-// HEADER de pantalla
-// -------------------------------------------------------------------------
 @Composable
 fun ScreenHeader(
     title: String,
@@ -61,9 +58,6 @@ fun ScreenHeader(
     }
 }
 
-// -------------------------------------------------------------------------
-// TEXT FIELD moderno
-// -------------------------------------------------------------------------
 @Composable
 fun AdoptMeTextField(
     value: String,
@@ -109,9 +103,6 @@ fun AdoptMeTextField(
     }
 }
 
-// -------------------------------------------------------------------------
-// SWITCH ROW
-// -------------------------------------------------------------------------
 @Composable
 fun AdoptMeSwitchRow(label: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
     Row(
@@ -141,9 +132,6 @@ fun AdoptMeSwitchRow(label: String, checked: Boolean, onCheckedChange: (Boolean)
     }
 }
 
-// -------------------------------------------------------------------------
-// CARD SECTION
-// -------------------------------------------------------------------------
 @Composable
 fun AdoptMeCardSection(title: String, content: @Composable ColumnScope.() -> Unit) {
     Card(
@@ -165,9 +153,6 @@ fun AdoptMeCardSection(title: String, content: @Composable ColumnScope.() -> Uni
     }
 }
 
-// -------------------------------------------------------------------------
-// CHIPS
-// -------------------------------------------------------------------------
 @Composable
 fun InfoChip(
     text: String,
@@ -201,9 +186,6 @@ fun StatusChip(text: String, containerColor: Color, textColor: Color) {
     }
 }
 
-// -------------------------------------------------------------------------
-// BADGE de distancia
-// -------------------------------------------------------------------------
 @Composable
 fun DistanceBadge(distanceKm: Double) {
     Surface(
@@ -225,9 +207,6 @@ fun DistanceBadge(distanceKm: Double) {
     }
 }
 
-// -------------------------------------------------------------------------
-// TEXTO EXPANDIBLE
-// -------------------------------------------------------------------------
 @Composable
 fun ExpandableText(
     text: String,
@@ -263,9 +242,6 @@ fun ExpandableText(
     }
 }
 
-// -------------------------------------------------------------------------
-// ATRIBUCIÓN de fuente
-// -------------------------------------------------------------------------
 @Composable
 fun SourceAttribution(sourceName: String, sourceUrl: String?) {
     val uriHandler = LocalUriHandler.current
@@ -293,9 +269,6 @@ fun SourceAttribution(sourceName: String, sourceUrl: String?) {
     }
 }
 
-// -------------------------------------------------------------------------
-// TOAST / snackbar flotante
-// -------------------------------------------------------------------------
 @Composable
 fun AdoptMeToast(
     message: String?,
@@ -331,9 +304,6 @@ fun AdoptMeToast(
     }
 }
 
-// -------------------------------------------------------------------------
-// BOTÓN circular de acción
-// -------------------------------------------------------------------------
 @Composable
 fun CircleActionButton(
     emoji: String,
@@ -356,9 +326,6 @@ fun CircleActionButton(
     }
 }
 
-// -------------------------------------------------------------------------
-// BOTONES DE ACCIÓN (Home)
-// -------------------------------------------------------------------------
 @Composable
 fun ActionButtons(
     onPass: () -> Unit,
@@ -436,9 +403,6 @@ fun ActionButtons(
     }
 }
 
-// -------------------------------------------------------------------------
-// ESTADO VACÍO
-// -------------------------------------------------------------------------
 @Composable
 fun EmptyState(
     message: String = "No hay más mascotas cercanas",
@@ -480,9 +444,6 @@ fun EmptyState(
     }
 }
 
-// -------------------------------------------------------------------------
-// SECCIÓN TÍTULO
-// -------------------------------------------------------------------------
 @Composable
 fun SectionTitle(text: String, modifier: Modifier = Modifier) {
     Text(

@@ -15,12 +15,12 @@ import java.util.UUID
 import kotlin.math.max
 
 /**
- * Guarda una sola foto de reporte optimizada para mapa y backend.
+ * Guarda una sola foto de reporte optimizada para el mapa y la base de datos de AdoptMe.
  *
  * - Reduce a máximo 1280 px.
  * - Corrige orientación EXIF.
  * - Comprime a WebP (~600 KB máximo).
- * - Devuelve solo la ruta local; el binario nunca va a DataStore/DB.
+ * - Devuelve solo la ruta local; el binario nunca va a DataStore ni a la base de datos.
  */
 object ReportImageStore {
 

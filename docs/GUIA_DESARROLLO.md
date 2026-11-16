@@ -1,8 +1,8 @@
-# AGENTS.md — Contexto oficial para agentes OpenCode
+# Guía de desarrollo — AdoptMe
 
 > **Proyecto:** AdoptMe — app Android de adopción responsable de mascotas.
 >
-> **Repositorio:** https://github.com/Madaboy/AdoptMe (privado)
+> **Repositorio:** https://github.com/Madaboy/AdoptMe (público)
 >
 > **Rama principal:** `main`
 >
@@ -10,22 +10,21 @@
 >
 > **Última actualización de este documento:** 2026-11-12
 
-Este archivo es el contexto que debe leer cualquier agente de OpenCode antes de
-trabajar en el proyecto. Para el resumen ejecutivo y los últimos cambios, lee
+Esta guía reúne el contexto técnico y las convenciones para trabajar en el proyecto. Para el resumen ejecutivo y los últimos cambios, lee
 también `docs/CONTEXT_ACTUAL.md`. Si algo no está claro, revisa `README.md`,
 `Informcion/AdoptMe_Especificacion_Tecnica.md` y el historial de Git.
 
 ---
 
-## 1. Prompt de arranque
+## 1. Punto de partida
 
-Si eres un agente que acaba de recibir este proyecto, empieza así:
+Si te incorporas al proyecto, empieza así:
 
 ```text
-Eres un agente de OpenCode trabajando en AdoptMe, una app Android de adopción
-responsable de mascotas. Antes de tocar código:
+Trabajas en AdoptMe, una app Android de adopción responsable de mascotas.
+Antes de tocar código:
 
-1. Lee completo AGENTS.md.
+1. Lee completa esta guía.
 2. Lee README.md y revisa git status, git log -5 y el estado de CI.
 3. No inventes datos ni agregues datos de ejemplo.
 4. Propón un plan corto antes de cambios grandes.
@@ -72,7 +71,7 @@ El mapa local de reportes ya usa MapLibre + OpenStreetMap.
   accesos a publicaciones/intereses/reportes/ajustes y cierre de sesión.
   Textos base alineados a Ley 21.719 y 21.020.
 - Publicación de mascota por pasos (fotos → descripción → confirmación legal)
-  con selección múltiple de fotos desde el Photo Picker del sistema.
+  con selección múltiple de fotos desde el selector de fotos del sistema.
 - Ficha de detalle completa en `ModalBottomSheet`.
 - Intereses persistentes en DataStore.
 - Publicaciones propias persistentes.
@@ -387,7 +386,7 @@ Reglas:
 
 ## 12. GitHub y CI
 
-- Repositorio: **https://github.com/Madaboy/AdoptMe** (privado).
+- Repositorio: **https://github.com/Madaboy/AdoptMe** (público).
 - Rama principal: `main`.
 - El remoto `origin` ya está configurado.
 - Workflow: `.github/workflows/android.yml`.
@@ -494,7 +493,7 @@ refactor: ...
 
 ## 16. Seguridad y privacidad
 
-- El repositorio es **privado**; no lo hagas público sin autorización.
+- El repositorio es **público**; no publiques credenciales ni archivos locales.
 - Nunca commitees:
   - `local.properties`
   - `*.jks`, `*.keystore`
@@ -524,7 +523,7 @@ Un cambio está terminado cuando:
 
 ---
 
-## 18. Contexto para el agente entrante
+## 18. Contexto para nuevos integrantes
 
 Este proyecto ya pasó por:
 

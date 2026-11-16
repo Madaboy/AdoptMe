@@ -2,12 +2,11 @@
 
 > **Última actualización:** 2026-11-12  
 > **Commit de referencia:** `7f9495c` (`main`)  
-> **Repositorio:** https://github.com/Madaboy/AdoptMe (privado)  
+> **Repositorio:** https://github.com/Madaboy/AdoptMe (público)
 > **Copia local:** `/home/madaboy/AndroidStudioProjects/AdoptMe`
 
 Este documento resume el estado real del proyecto después de la conversación de
-trabajo y de los últimos commits remotos. Es un complemento de `AGENTS.md` y
-`README.md`.
+trabajo y de los últimos commits remotos. Es un complemento de `docs/GUIA_DESARROLLO.md` y `README.md`.
 
 ---
 
@@ -97,7 +96,7 @@ Rutas: `adopt`, `reports`, `publish`, `interests`, `account`, `myPet`, `more`.
 ### Publicar
 
 - Wizard de 3 pasos:
-  1. Fotos (hasta 6, Photo Picker, tips de foto).
+  1. Fotos (hasta 6, selector de fotos, tips de foto).
   2. Descripción y opciones (especie, edad, raza, comuna, tamaño, energía,
      salud, convivencia).
   3. Confirmación y casillas legales (veracidad, Ley 21.020, autorización de
@@ -183,7 +182,7 @@ Paleta **Coral & Crema**:
 ### Optimización de fotos para la futura base de datos
 
 - No guardar binarios ni base64 en la base de datos.
-- Subir la imagen a **object storage** (Supabase Storage/S3).
+- Subir la imagen a **almacenamiento de objetos** (Supabase Storage/S3).
 - Guardar en `reports` solo `image_path` o `storage_key`.
 - Servir por CDN.
 - Borrar el objeto al eliminar el reporte.
@@ -247,13 +246,13 @@ Paleta **Coral & Crema**:
 
 ---
 
-## 11. Reglas para futuros agentes
+## 11. Reglas para nuevos integrantes
 
-- Leer `AGENTS.md` completo antes de tocar código.
+- Leer `docs/GUIA_DESARROLLO.md` completo antes de tocar código.
 - No inventar datos ni rellenar campos ausentes.
 - Mantener paleta Coral & Crema, Poppins y bordes redondeados.
 - No romper el flujo local sin backend.
-- Actualizar README/AGENTS/CONTEXT si cambia el comportamiento.
+- Actualizar README/GUÍA/CONTEXT si cambia el comportamiento.
 - Ejecutar `assembleDebug testDebugUnitTest lintDebug` antes de commitear.
 - Commit con Conventional Commits y push a `main`, salvo indicación contraria.
 - No commitear `local.properties`, tokens, keystores ni secretos.

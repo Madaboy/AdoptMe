@@ -2,7 +2,7 @@ package com.adoptme.data.model
 
 /**
  * Modelo de datos para un reporte de animal en peligro.
- * TODO: Cuando se conecte la API, esto se enviará via POST y se listará via GET.
+ * Pendiente: cuando se conecte la base de datos, enviar por POST y listar por GET.
  */
 data class Report(
     val id: Int,
@@ -14,8 +14,8 @@ data class Report(
     val longitude: Double? = null,
     val createdAt: Long = 0L,
     /**
-     * Ruta local del archivo comprimido. En el backend debe guardarse solo la
-     * clave/URL de object storage, nunca el binario ni base64 en la base de datos.
+     * Ruta local del archivo comprimido. En la base de datos de AdoptMe debe guardarse solo la
+     * clave/URL de almacenamiento de objetos, nunca el binario ni base64 en la base de datos.
      */
     val imagePath: String? = null
 )

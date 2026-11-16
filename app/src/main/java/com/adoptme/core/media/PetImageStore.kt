@@ -12,7 +12,7 @@ import java.util.UUID
  *
  * Se guarda una copia para que la publicación siga mostrando la imagen aunque
  * el permiso temporal del selector de fotos expire o el archivo original se mueva.
- * No se solicita permiso de almacenamiento: se usa el Photo Picker del sistema.
+ * No se solicita permiso de almacenamiento: se usa el selector de fotos del sistema.
  */
 object PetImageStore {
 

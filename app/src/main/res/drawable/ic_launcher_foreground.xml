@@ -10,7 +10,6 @@
         android:translateX="22.8"
         android:translateY="22.8">
 
-        <!-- Huella centrada dentro de la zona segura del icono adaptativo -->
         <path
             android:fillColor="#FFFFFFFF"
             android:pathData="M4.7,8.5 a1.8,1.8 0 1,0 3.6,0 a1.8,1.8 0 1,0 -3.6,0 Z" />

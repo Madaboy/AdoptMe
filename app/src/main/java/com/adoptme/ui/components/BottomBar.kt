@@ -31,7 +31,7 @@ import com.adoptme.core.navigation.Screen
 import com.adoptme.ui.theme.CoralAccent
 
 /**
- * Barra inferior flotante de 5 posiciones.
+ * Barra inferior flotante de cinco posiciones.
  *
  * Publicar · Reportes · [Adoptar] · Intereses · Mi Cuenta
  *

@@ -1,8 +1,8 @@
 package com.adoptme.core.flags
 
 /**
- * Enum representativo de las funcionalidades de la Expansión 4.6.
- * Todas las características están deshabilitadas por defecto hasta pasar la etapa de QA correspondiente.
+ * Funcionalidades de la expansión 4.6.
+ * Permanecen deshabilitadas hasta completar su QA.
  */
 enum class Feature {
     CHAT,

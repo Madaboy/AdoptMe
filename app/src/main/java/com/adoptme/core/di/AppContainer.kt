@@ -9,9 +9,8 @@ import com.adoptme.data.repository.DogRepository
 import com.adoptme.data.repository.DogRepositoryImpl
 
 /**
- * Contenedor manual de dependencias (Fase A).
- * Garantiza una única instancia del repositorio compartida por todos los ViewModels.
- * En la Fase B se reemplaza por Hilt sin cambiar los consumidores.
+ * Contenedor manual de dependencias.
+ * Mantiene una única instancia del repositorio compartida por los ViewModels.
  */
 object AppContainer {
 

@@ -4,7 +4,7 @@ import com.adoptme.core.common.HtmlText
 import com.google.gson.annotations.SerializedName
 
 /**
- * Contrato REAL de https://huachitos.cl/api/animales
+ * Contrato de la API de Huachitos: https://huachitos.cl/api/animales
  * Respuesta: { "data": [...], "links": {...}, "meta": {...} }
  */
 data class HuachitosResponse(

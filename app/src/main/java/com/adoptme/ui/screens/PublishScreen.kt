@@ -51,7 +51,7 @@ import kotlinx.coroutines.launch
 /**
  * Ficha de adopción por pasos:
  * 1) Fotos · 2) Descripción y opciones · 3) Confirmación y casillas legales.
- * Solo front-end visual tipo "liquid glass" (no es blur real).
+ * La interfaz usa un efecto visual tipo cristal, sin desenfoque real.
  */
 @Composable
 fun PublishScreen(
@@ -255,9 +255,6 @@ fun PublishScreen(
     }
 }
 
-// -------------------------------------------------------------------------
-// Fondo "liquid glass" (solo visual, sin blur real)
-// -------------------------------------------------------------------------
 @Composable
 private fun GlassBackground() {
     Box(modifier = Modifier.fillMaxSize()) {
@@ -318,9 +315,6 @@ private fun GlassCard(
     }
 }
 
-// -------------------------------------------------------------------------
-// Header y footer del wizard
-// -------------------------------------------------------------------------
 @Composable
 private fun WizardHeader(step: Int, onClose: () -> Unit) {
     val titles = listOf("Agrega las fotos", "Descripción y opciones", "Confirma y publica")
@@ -433,9 +427,6 @@ private fun WizardFooter(
     }
 }
 
-// -------------------------------------------------------------------------
-// Paso 1: Fotos
-// -------------------------------------------------------------------------
 @Composable
 private fun PhotoStep(
     photos: List<Uri>,
@@ -635,9 +626,6 @@ private fun PhotoThumb(uri: Uri, onRemove: () -> Unit) {
     }
 }
 
-// -------------------------------------------------------------------------
-// Paso 2: Descripción y opciones
-// -------------------------------------------------------------------------
 @Composable
 private fun DescriptionStep(
     name: String,
@@ -779,9 +767,6 @@ private fun DescriptionStep(
     }
 }
 
-// -------------------------------------------------------------------------
-// Paso 3: Confirmación y casillas legales
-// -------------------------------------------------------------------------
 @Composable
 private fun ConfirmStep(
     name: String,
@@ -895,9 +880,6 @@ private fun ConfirmCheck(
     }
 }
 
-// -------------------------------------------------------------------------
-// Control segmentado
-// -------------------------------------------------------------------------
 @Composable
 fun SegmentedControl(
     options: List<String>,

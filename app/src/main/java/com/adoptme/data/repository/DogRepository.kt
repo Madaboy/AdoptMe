@@ -14,7 +14,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 
 /**
- * INTERFAZ DE REPOSITORIO DE ANIMALES Y REPORTES
+ * Interfaz de repositorio de animales y reportes.
  * Oculta si los datos vienen de la API remota o del almacenamiento local.
  */
 interface DogRepository {

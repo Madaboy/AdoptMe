@@ -9,7 +9,7 @@ La Expansión 4.6 amplía las capacidades del producto AdoptMe agregando:
 - Gamificación y acciones responsables.
 - Soporte Multi-país (iniciando en Chile `CL`).
 
-Quedan expresamente fuera de alcance: llamadas de voz, videollamadas y funciones de IA.
+Quedan expresamente fuera de alcance: llamadas de voz y videollamadas.
 
 ---
 

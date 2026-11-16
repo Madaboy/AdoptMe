@@ -4,7 +4,6 @@
     android:viewportWidth="24"
     android:viewportHeight="24">
 
-    <!-- Hogar (contorno) -->
     <path
         android:pathData="M4,11 L12,4 L20,11 L20,20 L4,20 Z"
         android:strokeColor="#FFFFFFFF"
@@ -13,7 +12,6 @@
         android:strokeLineCap="round"
         android:fillColor="@android:color/transparent" />
 
-    <!-- Corazón: dar en adopción -->
     <path
         android:fillColor="#FFFFFFFF"
         android:pathData="M12,18.4 C12,18.4 7.6,15.4 7.6,12.6 C7.6,11 8.9,9.8 10.4,9.8 C11.2,9.8 11.8,10.2 12,10.6 C12.2,10.2 12.8,9.8 13.6,9.8 C15.1,9.8 16.4,11 16.4,12.6 C16.4,15.4 12,18.4 12,18.4 Z" />

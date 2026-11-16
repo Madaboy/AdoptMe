@@ -45,8 +45,8 @@ data class AuthResult(
 )
 
 /**
- * Cuenta local del prototipo. No hay backend todavía; la contraseña se guarda
- * como hash PBKDF2 con sal, nunca en texto plano.
+ * Cuenta local del prototipo. La contraseña se guarda como hash PBKDF2 con sal,
+ * nunca en texto plano. La base de datos de AdoptMe se conectará en la siguiente etapa.
  */
 class SessionManager(private val context: Context) {
 

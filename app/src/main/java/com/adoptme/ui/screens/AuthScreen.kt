@@ -30,9 +30,8 @@ private enum class AuthMode { REGISTER, LOGIN }
 
 /**
  * Registro e inicio de sesión local.
- *
- * La cuenta se guarda en DataStore con contraseña PBKDF2. No hay backend
- * todavía: la sesión y las publicaciones viven en este dispositivo.
+ * La cuenta se guarda en DataStore con contraseña PBKDF2.
+ * La base de datos de AdoptMe se conectará en la siguiente etapa.
  */
 @Composable
 fun AuthScreen(

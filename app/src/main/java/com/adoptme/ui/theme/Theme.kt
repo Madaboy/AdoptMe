@@ -22,9 +22,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.adoptme.R
 
-// -------------------------------------------------------------------------
-// PALETA "CORAL & CREMA" — tomada de la referencia PetCare
-// -------------------------------------------------------------------------
 
 val CoralPrimary = Color(0xFFD9534F)
 val CoralDeep = Color(0xFFB23B37)
@@ -44,7 +41,6 @@ val OutlineFaint = Color(0xFFF0EBE8)
 val DangerRed = Color(0xFFC0392B)
 val WarningAmber = Color(0xFFF2A93B)
 
-// Semántica del mapa de reportes
 val ReportAbandonment = WarningAmber
 val ReportDanger = DangerRed
 val ReportAdoption = CoralPrimary
@@ -107,9 +103,6 @@ private val DarkColors = darkColorScheme(
     inverseOnSurface = Ink
 )
 
-// -------------------------------------------------------------------------
-// TIPOGRAFÍA — Poppins
-// -------------------------------------------------------------------------
 
 val Poppins = FontFamily(
     Font(R.font.poppins_regular, FontWeight.Normal),

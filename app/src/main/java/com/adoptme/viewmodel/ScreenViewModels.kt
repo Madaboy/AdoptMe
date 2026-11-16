@@ -298,7 +298,7 @@ data class AuthUiState(
 
 /**
  * Estado de la cuenta local: sesión persistida, estadísticas del perfil y
- * registro/inicio de sesión sin backend.
+ * registro/inicio de sesión local mientras se conecta la base de datos de AdoptMe.
  */
 class AccountViewModel(
     private val sessionManager: SessionManager = AppContainer.sessionManager,
