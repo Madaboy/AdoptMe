@@ -26,6 +26,12 @@ Pendiente de infraestructura: Supabase/backend para alertas compartidas, Crashly
 - Guía de desarrollo: [docs/GUIA_DESARROLLO.md](docs/GUIA_DESARROLLO.md)
 - Contexto actualizado del producto y últimos cambios: [docs/CONTEXT_ACTUAL.md](docs/CONTEXT_ACTUAL.md)
 
+## Entrega Etapa 3
+
+- APK de prueba: [AdoptMe_Etapa3.apk](https://github.com/Madaboy/AdoptMe/releases/download/v0.1-mvp-etapa3/AdoptMe_Etapa3.apk)
+- Presentación y PDF: [Release Etapa 3](https://github.com/Madaboy/AdoptMe/releases/tag/v0.1-mvp-etapa3)
+- Detalle de archivos, pruebas y cambios: [docs/ENTREGA_ETAPA3.md](docs/ENTREGA_ETAPA3.md)
+
 ## Funcionalidades
 
 | Sección | Estado |
